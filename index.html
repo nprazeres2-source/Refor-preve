@@ -280,6 +280,37 @@
     <div id="histList"></div>
   </div>
 
+  <!-- PESQUISA -->
+  <div class="view" id="view-pesquisa">
+    <h2 style="font-size:16px;margin-bottom:10px;">Pesquisa</h2>
+    <div class="filters" style="flex-wrap:wrap;">
+      <select id="pesqAno" onchange="renderPesquisa()"><option value="">Todos os anos</option></select>
+      <select id="pesqMes" onchange="renderPesquisa()">
+        <option value="">Todos os meses</option>
+        <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option>
+        <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
+        <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
+        <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
+      </select>
+    </div>
+    <div class="filters">
+      <select id="pesqCategoria" onchange="renderPesquisa()">
+        <option value="">Todas as categorias</option>
+        <option value="reforco">Reforços</option>
+        <option value="prevencao">Prevenções</option>
+      </select>
+      <select id="pesqTipo" onchange="renderPesquisa()"><option value="">Todos os tipos</option></select>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi reforco"><div class="lbl">Horas feitas</div><div class="val" id="pesqHoras">0h</div></div>
+      <div class="kpi prevencao"><div class="lbl">Nº registos</div><div class="val" id="pesqCount">0</div></div>
+      <div class="kpi geral"><div class="lbl">Total a pagar</div><div class="val" id="pesqTotal">€0</div></div>
+    </div>
+
+    <div id="pesqList"></div>
+  </div>
+
   <!-- NOVO (chooser handled via modal forms) -->
   <div class="view" id="view-novo">
     <h2 style="font-size:16px;margin-bottom:14px;">Novo registo</h2>
@@ -345,6 +376,10 @@
       <button class="tab" data-view="historico" onclick="showView('historico')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
         Histórico
+      </button>
+      <button class="tab" data-view="pesquisa" onclick="showView('pesquisa')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        Pesquisa
       </button>
       <button class="tab" data-view="novo" onclick="showView('novo')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
@@ -589,6 +624,7 @@ function showView(name){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view===name));
   if(name==='dashboard') renderDashboard();
   if(name==='historico') renderHistorico();
+  if(name==='pesquisa') renderPesquisa();
   if(name==='tarifas') renderRateTable();
 }
 
@@ -647,6 +683,20 @@ function populateYearSelects(){
   dashSel.innerHTML = '<option value="all">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
   dashSel.value = cur && [...dashSel.options].some(o=>o.value===cur) ? cur : (years[0]||'all');
   filtSel.innerHTML = '<option value="">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
+
+  const pesqSel = document.getElementById('pesqAno');
+  if(pesqSel){
+    const curP = pesqSel.value;
+    pesqSel.innerHTML = '<option value="">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
+    pesqSel.value = [...pesqSel.options].some(o=>o.value===curP) ? curP : '';
+  }
+  const tipoSel = document.getElementById('pesqTipo');
+  if(tipoSel){
+    const curT = tipoSel.value;
+    const tipos = Array.from(new Set(state.records.map(r=>r.tipo).filter(Boolean))).sort((a,b)=>a.localeCompare(b,'pt'));
+    tipoSel.innerHTML = '<option value="">Todos os tipos</option>' + tipos.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    tipoSel.value = [...tipoSel.options].some(o=>o.value===curT) ? curT : '';
+  }
 }
 
 function renderDashboard(){
@@ -755,6 +805,35 @@ function renderHistorico(){
   if(cat) recs = recs.filter(r=>r.categoria===cat);
   recs.sort((a,b)=> (b.data||'').localeCompare(a.data||''));
   document.getElementById('histList').innerHTML = recs.map(histItemHtml).join('') || '<div class="empty-msg">Sem registos para este filtro</div>';
+}
+
+/* ============ PESQUISA ============ */
+function renderPesquisa(){
+  populateYearSelects();
+  const ano = document.getElementById('pesqAno').value;
+  const mes = document.getElementById('pesqMes').value;
+  const cat = document.getElementById('pesqCategoria').value;
+  const tipo = document.getElementById('pesqTipo').value;
+
+  let recs = [...state.records];
+  if(ano) recs = recs.filter(r=>r.ano===Number(ano));
+  if(mes!=='') recs = recs.filter(r=> r.data && (parseInt(r.data.slice(5,7))-1)===Number(mes));
+  if(cat) recs = recs.filter(r=>r.categoria===cat);
+  if(tipo) recs = recs.filter(r=>r.tipo===tipo);
+  recs.sort((a,b)=> (b.data||'').localeCompare(a.data||''));
+
+  let totalPagar = 0, totalHoras = 0;
+  recs.forEach(r=>{
+    const c = calcForRecord(r);
+    totalPagar += c ? c.totalPagar : r.total/1.08;
+    totalHoras += (r.semDia||0)+(r.semNoite||0)+(r.fdsDia||0)+(r.fdsNoite||0);
+  });
+
+  document.getElementById('pesqHoras').textContent = `${Math.round(totalHoras*100)/100}h`;
+  document.getElementById('pesqCount').textContent = recs.length;
+  document.getElementById('pesqTotal').textContent = euro(totalPagar);
+
+  document.getElementById('pesqList').innerHTML = recs.map(histItemHtml).join('') || '<div class="empty-msg">Sem registos para esta pesquisa</div>';
 }
 
 let currentDetailId = null;
