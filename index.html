@@ -201,10 +201,41 @@
   .file-input{display:none;}
   .settings-row{display:flex;gap:8px;margin-bottom:10px;}
   .settings-row select{flex:1;}
+  .print-header{display:none;}
   @media print{
-    .tabbar,.topbar-actions,.btn,.filters,.icon-btn{display:none !important;}
-    body{background:#fff;color:#000;}
-    .card{border-color:#ccc;background:#fff;}
+    .tabbar,.topbar-actions,.btn,.icon-btn,.modal-bg{display:none !important;}
+    html{background:#fff;}
+    body{background:#fff;color:#000;padding-bottom:0;min-height:0;}
+    input,select,textarea{background:#fff !important;color:#000 !important;border:1px solid #999 !important;}
+    .rate-table{min-width:0;width:100%;}
+    .rate-table input{width:100%;min-width:44px;}
+    .rate-table th,.rate-table td{color:#000;}
+    .rate-table th:first-child,.rate-table td:first-child{background:#fff !important;}
+    .rate-table th{border-bottom:2px solid #999;}
+    .app{max-width:100%;}
+    .topbar{border-bottom:2px solid #000;}
+    .brand-text .sub{color:#555;}
+    .card{border-color:#ccc;background:#fff;box-shadow:none;break-inside:avoid;}
+    .kpi{border-color:#999;background:#fff;}
+    .kpi .lbl{color:#555;}
+    .kpi.reforco .val{color:#1a7a6e;}
+    .kpi.prevencao .val{color:#a9710f;}
+    .kpi.geral .val{color:#000;}
+    .bar-track{background:#eee;border:1px solid #ccc;}
+    .bar-amt{color:#000;}
+    .hist-item{border-color:#ccc;background:#fff;break-inside:avoid;}
+    .hist-main .meta,.hist-main .equipa-line{color:#555;}
+    .tag-cat.reforco{background:#e3f1ee;color:#1a7a6e;}
+    .tag-cat.prevencao{background:#f6ead3;color:#a9710f;}
+    .print-header{
+      display:block;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #000;
+    }
+    .print-header h2{font-size:16px;margin:0 0 4px;}
+    .print-header .meta{font-size:12px;color:#444;}
+    .filters,select,.year-select{display:none !important;}
+    .view.active > h2{display:none;}
+    .no-print{display:none !important;}
+    .app-footer{color:#777;}
   }
 </style>
 </head>
@@ -219,11 +250,13 @@
       </div>
     </div>
     <div class="topbar-actions">
+      <button class="icon-btn" onclick="printCurrentView()">Imprimir</button>
       <button class="icon-btn" onclick="exportData()">Exportar</button>
       <button class="icon-btn" onclick="document.getElementById('importFile').click()">Importar</button>
       <input type="file" id="importFile" class="file-input" accept="application/json" onchange="importData(event)">
     </div>
   </div>
+  <div id="printHeader" class="print-header"></div>
 
   <!-- DASHBOARD -->
   <div class="view active" id="view-dashboard">
@@ -259,7 +292,7 @@
       <div id="recentList"></div>
     </div>
 
-    <div class="card">
+    <div class="card no-print">
       <h2 style="margin-bottom:12px;">Ações rápidas</h2>
       <button class="btn btn-primary reforco" onclick="openForm('reforco')">+ Novo Reforço</button>
       <button class="btn btn-primary" onclick="openForm('prevencao')">+ Nova Prevenção / Descarga</button>
@@ -335,7 +368,7 @@
           <option value="chefe">Chefe</option>
         </select>
       </div>
-      <div class="settings-row">
+      <div class="settings-row no-print">
         <input type="number" id="newRateYear" placeholder="Novo ano (ex. 2027)" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();addRateYear();}">
         <button class="icon-btn" onclick="addRateYear()">+ Adicionar ano</button>
       </div>
@@ -348,7 +381,7 @@
       <button class="btn btn-secondary" onclick="saveRates()">Guardar tarifas</button>
     </div>
 
-    <div class="card">
+    <div class="card no-print">
       <h2>Sincronização entre equipamentos</h2>
       <p class="hint" style="margin-bottom:10px;">Liga a app a uma base de dados Firebase gratuita para teres os mesmos registos atualizados em todos os telemóveis/tablets, em tempo real.</p>
       <div id="syncStatusBox" class="hint" style="margin-bottom:10px;"></div>
@@ -1230,6 +1263,55 @@ function importData(ev){
   };
   reader.readAsText(file);
   ev.target.value = '';
+}
+
+/* ============ PRINT ============ */
+function activeViewName(){
+  const el = document.querySelector('.view.active');
+  return el ? el.id.replace('view-','') : 'dashboard';
+}
+function printCurrentView(){
+  const view = activeViewName();
+  const now = new Date().toLocaleDateString('pt-PT');
+  let title = 'Prevenções & Reforços', meta = '';
+
+  if(view==='dashboard'){
+    const sel = document.getElementById('dashYear').value;
+    title = 'Resumo — ' + (sel==='all' ? 'Todos os anos' : sel);
+    meta = `Reforços: ${document.getElementById('kpiReforco').textContent} · Prevenções: ${document.getElementById('kpiPrevencao').textContent} · Total: ${document.getElementById('kpiTotal').textContent}`;
+  } else if(view==='historico'){
+    const ano = document.getElementById('filtAno').value;
+    const cat = document.getElementById('filtCategoria').value;
+    const catLabel = cat==='reforco' ? 'Reforços' : cat==='prevencao' ? 'Prevenções' : 'Todas as categorias';
+    title = 'Histórico — ' + (ano || 'Todos os anos');
+    meta = catLabel + ' · ' + document.querySelectorAll('#histList .hist-item').length + ' registo(s)';
+  } else if(view==='pesquisa'){
+    const ano = document.getElementById('pesqAno').value;
+    const mesSel = document.getElementById('pesqMes');
+    const mes = mesSel.options[mesSel.selectedIndex].textContent;
+    const cat = document.getElementById('pesqCategoria').value;
+    const catLabel = cat==='reforco' ? 'Reforços' : cat==='prevencao' ? 'Prevenções' : 'Todas as categorias';
+    const tipoSel = document.getElementById('pesqTipo');
+    const tipo = tipoSel.options[tipoSel.selectedIndex].textContent;
+    title = 'Pesquisa';
+    meta = `${ano||'Todos os anos'} · ${mes} · ${catLabel} · ${tipo}<br>`+
+           `Horas feitas: ${document.getElementById('pesqHoras').textContent} · `+
+           `Nº registos: ${document.getElementById('pesqCount').textContent} · `+
+           `Total a pagar: ${document.getElementById('pesqTotal').textContent}`;
+  } else if(view==='tarifas'){
+    const cat = document.getElementById('rateCategoria').value;
+    const catLabel = cat==='reforco' ? 'Reforço' : 'Prevenção / Descarga';
+    const grauSel = document.getElementById('rateGrau');
+    const grauLabel = (cat==='prevencao') ? (' · ' + grauSel.options[grauSel.selectedIndex].textContent) : '';
+    title = 'Tabela de tarifas';
+    meta = catLabel + grauLabel;
+  } else {
+    title = 'Prevenções & Reforços';
+  }
+
+  document.getElementById('printHeader').innerHTML =
+    `<h2>${title}</h2><div class="meta">${meta}${meta?' · ':''}Impresso em ${now}</div>`;
+  window.print();
 }
 
 /* ============ INIT ============ */
