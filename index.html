@@ -682,7 +682,9 @@ function populateYearSelects(){
   const cur = dashSel.value;
   dashSel.innerHTML = '<option value="all">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
   dashSel.value = cur && [...dashSel.options].some(o=>o.value===cur) ? cur : (years[0]||'all');
+  const curF = filtSel.value;
   filtSel.innerHTML = '<option value="">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
+  filtSel.value = [...filtSel.options].some(o=>o.value===curF) ? curF : '';
 
   const pesqSel = document.getElementById('pesqAno');
   if(pesqSel){
@@ -693,8 +695,9 @@ function populateYearSelects(){
   const tipoSel = document.getElementById('pesqTipo');
   if(tipoSel){
     const curT = tipoSel.value;
-    const tipos = Array.from(new Set(state.records.map(r=>r.tipo).filter(Boolean))).sort((a,b)=>a.localeCompare(b,'pt'));
-    tipoSel.innerHTML = '<option value="">Todos os tipos</option>' + tipos.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    const keys = Array.from(new Set(state.records.map(r=>normalizeTipoKey(r.tipo))));
+    keys.sort((a,b)=> tipoLabel(a).localeCompare(tipoLabel(b),'pt'));
+    tipoSel.innerHTML = '<option value="">Todos os tipos</option>' + keys.map(k=>`<option value="${escapeHtml(k)}">${escapeHtml(tipoLabel(k))}</option>`).join('');
     tipoSel.value = [...tipoSel.options].some(o=>o.value===curT) ? curT : '';
   }
 }
@@ -790,6 +793,41 @@ function histItemHtml(r){
   </div>`;
 }
 function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* Groups similarly-named service types together (e.g. "Prev. Líquidos", "Prev_Líquidos",
+   "Prevenção Líquidos" and "Líquidos" all refer to the same activity) so searching by
+   type finds every matching record regardless of how it was originally typed. */
+const TIPO_SYNONYMS = {
+  'rali':'rali','ralie':'rali','rally':'rali',
+  'tnu':'reforco tnu',
+  'evac aero medica':'evac aeromedica','aero medica':'evac aeromedica',
+  'desp aca':'desportiva',
+  'vac covid':'vac covid'
+};
+const TIPO_LABELS = {
+  'liquidos':'Líquidos','gas':'Gás','ciclismo':'Ciclismo','desportiva':'Desportiva',
+  'motocross':'Motocross','rali':'Rali','trail':'Trail','traill':'Trail',
+  'evac medica':'Evac. Médica','evac aeromedica':'Evac. Aeromédica',
+  'evacuacao':'Evacuação','reforco tnu':'Reforço TNU','vac covid':'Vac. COVID',
+  'prevencao':'Prevenção','cadaver':'Cadáver','tourada':'Tourada',
+  'remocao cachalote':'Remoção Cachalote','noite-reforco':'Noite-Reforço',
+  'desentupimento':'Desentupimento','ambulancia cb':'Ambulância-CB',
+  'amb filme':'Amb. Filme','noite reforco':'Noite-Reforço',
+  'reforco cb semana mar':'Ref. CB Semana Mar','morro c branco':'Morro C. Branco',
+  'azores trail run':'Azores Trail Run','prova peter':'Prova Peter'
+};
+function normalizeTipoKey(raw){
+  let s = (raw||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  s = s.replace(/[-_./]/g,' ').replace(/\s+/g,' ').trim();
+  s = s.replace(/^prevencao\s+/,'').replace(/^prevenc\w*\s+/,'').replace(/^prev\s+/,'');
+  s = s.replace(/^ref\s+/,'reforco ').replace(/^reforco\s+/,'reforco ');
+  if(TIPO_SYNONYMS[s]) s = TIPO_SYNONYMS[s];
+  return s || 'outro';
+}
+function tipoLabel(key){
+  if(TIPO_LABELS[key]) return TIPO_LABELS[key];
+  return key.replace(/\b\w/g, c=>c.toUpperCase());
+}
 function formatDatePT(d){
   if(!d) return '';
   const [y,m,day] = d.split('-');
@@ -819,7 +857,7 @@ function renderPesquisa(){
   if(ano) recs = recs.filter(r=>r.ano===Number(ano));
   if(mes!=='') recs = recs.filter(r=> r.data && (parseInt(r.data.slice(5,7))-1)===Number(mes));
   if(cat) recs = recs.filter(r=>r.categoria===cat);
-  if(tipo) recs = recs.filter(r=>r.tipo===tipo);
+  if(tipo) recs = recs.filter(r=>normalizeTipoKey(r.tipo)===tipo);
   recs.sort((a,b)=> (b.data||'').localeCompare(a.data||''));
 
   let totalPagar = 0, totalHoras = 0;
