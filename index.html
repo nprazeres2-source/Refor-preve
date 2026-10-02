@@ -808,15 +808,27 @@ function renderDashboard(){
 }
 
 /* ============ HISTORICO ============ */
+function horasBreakdown(r){
+  const parts = [];
+  if(r.semDia) parts.push(`Sem. dia ${r.semDia}h`);
+  if(r.semNoite) parts.push(`Sem. noite ${r.semNoite}h`);
+  if(r.fdsDia) parts.push(`Fds dia ${r.fdsDia}h`);
+  if(r.fdsNoite) parts.push(`Fds noite ${r.fdsNoite}h`);
+  return parts.join(' · ');
+}
 function histItemHtml(r){
   const c = calcForRecord(r);
   const pagar = c ? c.totalPagar : r.total/1.08;
   const equipaLine = (r.equipa && r.equipa.length) ? r.equipa.join(', ') : '';
   const grauLabel = r.categoria==='prevencao' ? (r.grau==='chefe'?'Chefe':'Praça') : '';
+  const horas = (r.semDia||0)+(r.semNoite||0)+(r.fdsDia||0)+(r.fdsNoite||0);
+  const horasTxt = `${Math.round(horas*100)/100}h`;
+  const breakdown = horasBreakdown(r);
   return `<div class="hist-item" onclick="openDetail('${r.id}')">
     <div class="hist-main">
       <div class="tipo">${escapeHtml(r.tipo||'')}</div>
-      <div class="meta">${formatDatePT(r.data)}${r.inicio?(' · '+r.inicio+(r.fim?'–'+r.fim:'')):''}</div>
+      <div class="meta">${formatDatePT(r.data)}${r.inicio?(' · '+r.inicio+(r.fim?'–'+r.fim:'')):''} · ${horasTxt}</div>
+      ${breakdown?`<div class="equipa-line">${breakdown}</div>`:''}
       ${equipaLine?`<div class="equipa-line">${escapeHtml(equipaLine)}</div>`:''}
     </div>
     <div class="hist-amt">
