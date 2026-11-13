@@ -17,6 +17,8 @@
     --red-deep:#8f2323;
     --amber:#d99a3d;
     --teal:#3d9186;
+    --sky:#5b8fd9;
+    --violet:#a07cd6;
     --green:#4a9d6e;
     --font: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --mono: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
@@ -82,12 +84,14 @@
   .kpi .val{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;}
   .kpi.reforco .val{color:var(--teal);}
   .kpi.prevencao .val{color:var(--amber);}
+  .kpi.aeroporto .val{color:var(--sky);}
+  .kpi.prolongamento .val{color:var(--violet);}
   .kpi.geral .val{color:var(--ink);}
 
   .year-select{
     display:flex;align-items:center;gap:8px;margin-bottom:12px;
   }
-  select, input[type=text], input[type=number], input[type=date], input[type=time]{
+  select, input[type=text], input[type=number], input[type=date], input[type=time], input[type=email], input[type=password]{
     background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
     border-radius:8px;padding:9px 10px;font-size:14px;font-family:var(--font);width:100%;
   }
@@ -101,19 +105,25 @@
   .bar-seg{height:100%;}
   .bar-seg.reforco{background:var(--teal);}
   .bar-seg.prevencao{background:var(--amber);}
+  .bar-seg.aeroporto{background:var(--sky);}
+  .bar-seg.prolongamento{background:var(--violet);}
   .bar-amt{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);}
 
-  .legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:8px;}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-top:8px;}
   .legend span{display:inline-flex;align-items:center;gap:5px;}
   .dot{width:9px;height:9px;border-radius:2px;display:inline-block;}
   .dot.reforco{background:var(--teal);}
   .dot.prevencao{background:var(--amber);}
+  .dot.aeroporto{background:var(--sky);}
+  .dot.prolongamento{background:var(--violet);}
 
   /* Forms */
-  .seg-toggle{display:flex;background:var(--panel-2);border-radius:10px;padding:3px;margin-bottom:16px;border:1px solid var(--line);}
-  .seg-btn{flex:1;text-align:center;padding:9px;border-radius:8px;font-size:13px;background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font);font-weight:600;}
+  .seg-toggle{display:flex;flex-wrap:wrap;gap:3px;background:var(--panel-2);border-radius:10px;padding:3px;margin-bottom:16px;border:1px solid var(--line);}
+  .seg-btn{flex:1 1 calc(50% - 3px);text-align:center;padding:9px;border-radius:8px;font-size:13px;background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font);font-weight:600;}
   .seg-btn.active.reforco{background:var(--teal);color:#08201d;}
   .seg-btn.active.prevencao{background:var(--amber);color:#2b1c05;}
+  .seg-btn.active.aeroporto{background:var(--sky);color:#081a33;}
+  .seg-btn.active.prolongamento{background:var(--violet);color:#1d1033;}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -141,6 +151,8 @@
   }
   .btn-primary{background:var(--amber);color:#2b1c05;}
   .btn-primary.reforco{background:var(--teal);color:#08201d;}
+  .btn-primary.aeroporto{background:var(--sky);color:#081a33;}
+  .btn-primary.prolongamento{background:var(--violet);color:#1d1033;}
   .btn-secondary{background:var(--panel-2);color:var(--ink);border:1px solid var(--line);}
   .btn-danger{background:transparent;color:var(--red);border:1px solid var(--red-deep);}
   .btn-sm{width:auto;padding:7px 12px;font-size:12px;margin-top:0;display:inline-block;}
@@ -161,6 +173,8 @@
   .hist-amt .tag-cat{font-size:10px;padding:2px 7px;border-radius:999px;margin-top:4px;display:inline-block;}
   .tag-cat.reforco{background:rgba(61,145,134,.18);color:var(--teal);}
   .tag-cat.prevencao{background:rgba(217,154,61,.18);color:var(--amber);}
+  .tag-cat.aeroporto{background:rgba(91,143,217,.18);color:var(--sky);}
+  .tag-cat.prolongamento{background:rgba(160,124,214,.18);color:var(--violet);}
   .empty-msg{text-align:center;color:var(--muted);padding:30px 10px;font-size:13px;}
 
   /* Tarifas */
@@ -201,6 +215,26 @@
   .file-input{display:none;}
   .settings-row{display:flex;gap:8px;margin-bottom:10px;}
   .settings-row select{flex:1;}
+  /* ===== Login ===== */
+  #authScreen,#dataLoading{
+    position:fixed;inset:0;z-index:300;background:var(--bg);
+    display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;
+  }
+  #dataLoading{z-index:250;display:none;}
+  body.loading-data #dataLoading{display:flex;}
+  body.state-app #authScreen{display:none;}
+  body:not(.state-app) .app, body:not(.state-app) .tabbar{display:none;}
+  body.state-loading #authForm{display:none;}
+  body:not(.state-loading) #authChecking{display:none;}
+  .auth-box{width:100%;max-width:360px;text-align:center;}
+  .auth-logo{width:84px;height:84px;object-fit:contain;margin-bottom:10px;}
+  .auth-box h1{font-size:22px;margin-bottom:6px;}
+  .auth-sub{font-size:13px;color:var(--muted);margin-bottom:14px;}
+  .auth-box label{text-align:left;}
+  .auth-msg{font-size:13px;min-height:18px;margin-top:10px;color:var(--red);}
+  .auth-msg.ok{color:var(--green);}
+  .auth-foot{font-size:11px;color:var(--muted);margin-top:22px;}
+  .link-btn{background:none;border:none;color:var(--muted);text-decoration:underline;font-size:13px;cursor:pointer;margin-top:14px;font-family:var(--font);}
   .print-header{display:none;}
   @media print{
     .tabbar,.topbar-actions,.btn,.icon-btn,.modal-bg{display:none !important;}
@@ -220,6 +254,8 @@
     .kpi .lbl{color:#555;}
     .kpi.reforco .val{color:#1a7a6e;}
     .kpi.prevencao .val{color:#a9710f;}
+    .kpi.aeroporto .val{color:#2c5fa8;}
+    .kpi.prolongamento .val{color:#6b45a8;}
     .kpi.geral .val{color:#000;}
     .bar-track{background:#eee;border:1px solid #ccc;}
     .bar-amt{color:#000;}
@@ -227,6 +263,8 @@
     .hist-main .meta,.hist-main .equipa-line{color:#555;}
     .tag-cat.reforco{background:#e3f1ee;color:#1a7a6e;}
     .tag-cat.prevencao{background:#f6ead3;color:#a9710f;}
+    .tag-cat.aeroporto{background:#e1ebf8;color:#2c5fa8;}
+    .tag-cat.prolongamento{background:#ece4f6;color:#6b45a8;}
     .print-header{
       display:block;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #000;
     }
@@ -234,12 +272,12 @@
     .print-header .meta{font-size:12px;color:#444;}
     .filters,select,.year-select{display:none !important;}
     .view.active > h2{display:none;}
-    .no-print{display:none !important;}
+    .no-print,#authScreen,#dataLoading{display:none !important;}
     .app-footer{color:#777;}
   }
 </style>
 </head>
-<body>
+<body class="state-loading">
 <div class="app">
   <div class="topbar">
     <div class="brand">
@@ -268,6 +306,9 @@
       <div class="kpi prevencao"><div class="lbl">Prevenções</div><div class="val" id="kpiPrevencao">€0</div></div>
       <div class="kpi geral"><div class="lbl">Total ano</div><div class="val" id="kpiTotal">€0</div></div>
     </div>
+    <div class="kpi-row" style="grid-template-columns:1fr;">
+      <div class="kpi aeroporto"><div class="lbl">Aeroporto (inclui prolongamento)</div><div class="val" id="kpiAeroporto">€0</div></div>
+    </div>
 
     <div class="card">
       <h2>Total a pagar por ano (líquido)</h2>
@@ -275,6 +316,7 @@
       <div class="legend">
         <span><i class="dot reforco"></i>Reforços</span>
         <span><i class="dot prevencao"></i>Prevenções</span>
+        <span><i class="dot aeroporto"></i>Aeroporto</span>
       </div>
     </div>
 
@@ -284,6 +326,7 @@
       <div class="legend">
         <span><i class="dot reforco"></i>Reforços</span>
         <span><i class="dot prevencao"></i>Prevenções</span>
+        <span><i class="dot aeroporto"></i>Aeroporto</span>
       </div>
     </div>
 
@@ -296,6 +339,7 @@
       <h2 style="margin-bottom:12px;">Ações rápidas</h2>
       <button class="btn btn-primary reforco" onclick="openForm('reforco')">+ Novo Reforço</button>
       <button class="btn btn-primary" onclick="openForm('prevencao')">+ Nova Prevenção / Descarga</button>
+    <button class="btn btn-primary aeroporto" onclick="openForm('aeroporto')">+ Novo Aeroporto</button>
     </div>
   </div>
 
@@ -308,6 +352,7 @@
         <option value="">Todas as categorias</option>
         <option value="reforco">Reforços</option>
         <option value="prevencao">Prevenções</option>
+        <option value="aeroporto">Aeroporto</option>
       </select>
     </div>
     <div id="histList"></div>
@@ -331,6 +376,7 @@
         <option value="">Todas as categorias</option>
         <option value="reforco">Reforços</option>
         <option value="prevencao">Prevenções</option>
+        <option value="aeroporto">Aeroporto</option>
       </select>
       <select id="pesqTipo" onchange="renderPesquisa()"><option value="">Todos os tipos</option></select>
     </div>
@@ -349,7 +395,8 @@
     <h2 style="font-size:16px;margin-bottom:14px;">Novo registo</h2>
     <button class="btn btn-primary reforco" onclick="openForm('reforco')">+ Novo Reforço</button>
     <button class="btn btn-primary" onclick="openForm('prevencao')">+ Nova Prevenção / Descarga</button>
-    <p class="hint" style="margin-top:16px;">Reforço: turnos com tarifa fixa por hora (ex. Reforço TNU, apoio a eventos).<br>Prevenção/Descarga: serviços com início-fim e equipa (piscinas, eventos desportivos, evacuações, etc.).</p>
+    <button class="btn btn-primary aeroporto" onclick="openForm('aeroporto')">+ Novo Aeroporto</button>
+    <p class="hint" style="margin-top:16px;">Reforço: turnos com tarifa fixa por hora (ex. Reforço TNU, apoio a eventos).<br>Prevenção/Descarga: serviços com início-fim e equipa (piscinas, eventos desportivos, evacuações, etc.).<br>Aeroporto (com ou sem prolongamento): serviços pagos com um valor fixo por hora.</p>
   </div>
 
   <!-- TARIFAS -->
@@ -362,7 +409,8 @@
         <select id="rateCategoria" onchange="onRateCategoriaChange()">
           <option value="prevencao">Prevenção / Descarga</option>
           <option value="reforco">Reforço</option>
-        </select>
+          <option value="aeroporto">Aeroporto</option>
+          </select>
         <select id="rateGrau" onchange="renderRateTable()">
           <option value="pracas">Praça</option>
           <option value="chefe">Chefe</option>
@@ -382,19 +430,15 @@
     </div>
 
     <div class="card no-print">
-      <h2>Sincronização entre equipamentos</h2>
-      <p class="hint" style="margin-bottom:10px;">Liga a app a uma base de dados Firebase gratuita para teres os mesmos registos atualizados em todos os telemóveis/tablets, em tempo real.</p>
-      <div id="syncStatusBox" class="hint" style="margin-bottom:10px;"></div>
-
-      <label>Configuração Firebase (cole aqui o objeto firebaseConfig)</label>
-      <textarea id="syncConfig" rows="5" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...", ...}' style="width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:9px 10px;font-family:var(--mono);font-size:12px;"></textarea>
-
-      <label>Código de sincronização</label>
-      <input type="text" id="syncCode" placeholder="ex. prazeres-bombeiros">
-      <p class="hint">Usa o mesmo código em todos os equipamentos para partilharem os mesmos dados. Guarda-o num sítio seguro — quem tiver o código e a configuração acede aos dados.</p>
-
-      <button class="btn btn-primary reforco" onclick="connectSync()">Ligar e sincronizar</button>
-      <button class="btn btn-danger" onclick="disconnectSync()">Desligar sincronização</button>
+      <h2>Conta</h2>
+      <div id="accountEmail" style="font-size:14px;margin-bottom:6px;"></div>
+      <div id="syncStatusBox" class="hint" style="margin-bottom:12px;"></div>
+      <div id="legacyBox" style="display:none;background:var(--panel-2);border:1px dashed var(--line);border-radius:10px;padding:12px;margin-bottom:12px;">
+        <div style="font-size:13px;margin-bottom:8px;" id="legacyText"></div>
+        <button class="btn btn-primary reforco btn-sm" onclick="importLegacy()">Importar para esta conta</button>
+      </div>
+      <p class="hint">Os seus registos ficam associados a esta conta e só você os vê. Pode abrir a app noutros equipamentos com o mesmo email e palavra-passe.</p>
+      <button class="btn btn-danger" onclick="doLogout()">Terminar sessão</button>
     </div>
   </div>
 
@@ -437,9 +481,18 @@
     <div class="seg-toggle">
       <button class="seg-btn reforco" id="segReforco" onclick="switchFormType('reforco')">Reforço</button>
       <button class="seg-btn prevencao" id="segPrevencao" onclick="switchFormType('prevencao')">Prevenção / Descarga</button>
+      <button class="seg-btn aeroporto" id="segAeroporto" onclick="switchFormType('aeroporto')">Aeroporto</button>
     </div>
 
     <input type="hidden" id="editId">
+
+    <div id="wrap_subtipo" style="display:none;">
+      <label>Serviço de aeroporto</label>
+      <div class="seg-toggle">
+        <button type="button" class="seg-btn aeroporto" id="subNormal" onclick="setSub('normal')">Aeroporto</button>
+        <button type="button" class="seg-btn aeroporto" id="subProl" onclick="setSub('prolongamento')">Prolongamento</button>
+      </div>
+    </div>
 
     <label>Tipo de serviço</label>
     <input type="text" id="f_tipo" placeholder="ex. Reforço TNU, Prev. Líquidos, Prev. Desportiva...">
@@ -458,6 +511,16 @@
       </div>
     </div>
 
+    <div id="wrap_horas" style="display:none;margin-top:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <label style="margin:0;">Horas feitas</label>
+        <span id="horasSimplesDisplay" style="font-size:12px;color:var(--muted);"></span>
+      </div>
+      <input type="number" step="0.25" min="0" id="f_horas" value="0" oninput="updatePreview()">
+      <p class="hint" style="margin-top:4px;">Calculado automaticamente a partir do início/fim (pode ajustar). O valor à hora (Aeroporto ou Prolongamento) é o definido em "Tarifas".</p>
+    </div>
+
+    <div id="wrap_blocos">
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;">
       <label style="margin:0;">Horas por bloco</label>
       <span id="totalHorasDisplay" style="font-size:12px;color:var(--muted);"></span>
@@ -472,6 +535,7 @@
     <div class="grid2">
       <div><label>Pequeno-almoço (nº)</label><input type="number" step="1" min="0" id="f_palm" value="0" oninput="updatePreview()"></div>
       <div id="wrap_refeicao_label"><label>Refeição (nº)</label><input type="number" step="1" min="0" id="f_refeicao" value="0" oninput="updatePreview()"></div>
+    </div>
     </div>
 
     <div id="wrap_grau">
@@ -512,132 +576,66 @@
 
 <div class="toast" id="toast"></div>
 
+<div id="authScreen">
+  <div class="auth-box">
+    <img id="authLogo" class="auth-logo" alt="Prevenções e Reforços">
+    <h1>Prevenções &amp; Reforços</h1>
+    <div id="authChecking" class="auth-sub">A verificar sessão…</div>
+    <form id="authForm" onsubmit="event.preventDefault();doLogin();">
+      <div class="auth-sub">Inicie sessão para aceder aos seus registos</div>
+      <label>Email</label>
+      <input type="email" id="authEmail" autocomplete="username" inputmode="email" autocapitalize="none">
+      <label>Palavra-passe</label>
+      <input type="password" id="authPass" autocomplete="current-password">
+      <div id="authMsg" class="auth-msg"></div>
+      <button type="submit" class="btn btn-primary">Entrar</button>
+      <button type="button" class="btn btn-secondary" onclick="doRegister()">Criar conta</button>
+      <button type="button" class="link-btn" onclick="doReset()">Esqueci a palavra-passe</button>
+    </form>
+    <div id="authFootMsg" class="auth-msg"></div>
+    <div class="auth-foot">© Nuno Prazeres</div>
+  </div>
+</div>
+
+<div id="dataLoading">
+  <div class="auth-box">
+    <div id="dataLoadingText" class="auth-sub">A carregar os seus dados…</div>
+    <div id="dataLoadingBtns" style="display:none;">
+      <button class="btn btn-primary" onclick="location.reload()">Tentar novamente</button>
+      <button class="btn btn-secondary" onclick="doLogout(true)">Terminar sessão</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-/* ============ SYNC (Firebase) ============ */
-const SYNC_KEY = 'pr_sync_cfg';
-let syncDb = null;
-let syncDocRef = null;
-let syncUnsub = null;
-let applyingRemote = false;
-
-function loadSyncConfig(){
-  try{ return JSON.parse(localStorage.getItem(SYNC_KEY) || 'null'); }catch(e){ return null; }
-}
-function saveSyncConfig(cfg){
-  localStorage.setItem(SYNC_KEY, JSON.stringify(cfg));
-}
-function clearSyncConfig(){
-  localStorage.removeItem(SYNC_KEY);
-}
-
-function setSyncStatus(msg, ok){
-  const box = document.getElementById('syncStatusBox');
-  if(!box) return;
-  box.textContent = msg;
-  box.style.color = ok ? 'var(--green)' : 'var(--muted)';
-}
-
-function connectSync(fromInit){
-  let cfgText, code;
-  if(fromInit){
-    const saved = loadSyncConfig();
-    if(!saved) return;
-    cfgText = JSON.stringify(saved.config);
-    code = saved.code;
-  } else {
-    cfgText = document.getElementById('syncConfig').value.trim();
-    code = document.getElementById('syncCode').value.trim();
-  }
-  if(!cfgText || !code){ toast('Preencha a configuração e o código de sincronização'); return; }
-  let cfg;
-  try{ cfg = JSON.parse(cfgText); }catch(e){ toast('Configuração inválida (deve ser JSON)'); return; }
-
-  if(typeof firebase === 'undefined'){
-    if(!fromInit) toast('Sem ligação à internet para carregar o Firebase');
-    setSyncStatus('Não foi possível carregar o Firebase (verifique a ligação à internet).', false);
-    return;
-  }
-
-  try{
-    if(!firebase.apps || firebase.apps.length === 0){
-      firebase.initializeApp(cfg);
-    }
-    syncDb = firebase.firestore();
-    syncDocRef = syncDb.collection('pr_sync').doc(code);
-  }catch(e){
-    setSyncStatus('Erro ao ligar: ' + e.message, false);
-    toast('Erro ao ligar ao Firebase');
-    return;
-  }
-
-  if(syncUnsub) syncUnsub();
-  syncUnsub = syncDocRef.onSnapshot(snap=>{
-    if(snap.exists){
-      const remote = snap.data();
-      if(remote && remote.payload){
-        applyingRemote = true;
-        try{
-          state = JSON.parse(remote.payload);
-          localStorage.setItem(STORAGE_KEY, remote.payload);
-          renderDashboard();
-          renderHistorico();
-          renderRateTable();
-        }catch(e){}
-        applyingRemote = false;
-      }
-      setSyncStatus('Ligado · última atualização: ' + new Date().toLocaleTimeString('pt-PT'), true);
-    } else {
-      // no remote doc yet - push current local state as the initial version
-      pushSyncNow();
-    }
-  }, err=>{
-    setSyncStatus('Erro de sincronização: ' + err.message, false);
-  });
-
-  saveSyncConfig({config: cfg, code: code});
-  if(!fromInit){
-    document.getElementById('syncConfig').value = '';
-    toast('Sincronização ligada');
-  }
-  setSyncStatus('A ligar...', false);
-}
-
-function disconnectSync(){
-  if(syncUnsub){ syncUnsub(); syncUnsub = null; }
-  syncDb = null; syncDocRef = null;
-  clearSyncConfig();
-  setSyncStatus('Sincronização desligada. Os dados continuam guardados neste equipamento.', false);
-  toast('Sincronização desligada');
-}
-
-function pushSyncNow(){
-  if(!syncDocRef || applyingRemote) return;
-  syncDocRef.set({ payload: JSON.stringify(state), updatedAt: new Date().toISOString() })
-    .then(()=> setSyncStatus('Ligado · sincronizado às ' + new Date().toLocaleTimeString('pt-PT'), true))
-    .catch(err=> setSyncStatus('Erro ao gravar: ' + err.message, false));
-}
-
-</script>
-<script>
 /* ============ DATA ============ */
-const SEED = {"records": [{"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-01-02", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h1", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-01-15", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h2", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-01-23", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h3", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-02-06", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h4", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-02-19", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h5", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-02-26", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h6", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-03-05", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h7", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-03-06", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h8", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-03-12", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h9", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-03-13", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h10", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-04-01", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h11", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-04-14", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h12", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-04-21", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h13", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-04-22", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h14", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-06-11", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h15", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-06-12", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h16", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-06-18", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h17", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-06-19", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h18", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-06-26", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h19", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-07-02", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h20", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-07-03", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h21", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-07-09", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h22", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-07-10", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h23", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-07-16", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h24", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-07-23", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h25", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-08-06", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h26", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-08-07", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h27", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-08-20", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h28", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-08-21", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h29", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-08-27", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h30", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-08-28", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h31", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-09-03", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h32", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-09-04", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h33", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-09-10", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h34", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-09-18", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h35", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-09-24", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h36", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2022-09-25", "ano": 2022, "semDia": 0, "semNoite": 0, "fdsDia": 11.0, "fdsNoite": 0, "palm": 0, "refeicao": 1.0, "total": 56.47, "desconto": 4.183, "totalPagar": 52.287, "equipa": [], "id": "h37", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Noite-Reforço", "data": "2021-05-01", "ano": 2021, "semDia": 0.0, "semNoite": 8.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 0.0, "total": 37.6, "desconto": 2.7852, "totalPagar": 34.8148, "equipa": [], "id": "h38", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-05-01", "ano": 2021, "semDia": 11.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h39", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-05-08", "ano": 2021, "semDia": 11.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h40", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Noite-Reforço", "data": "2021-05-15", "ano": 2021, "semDia": 0.0, "semNoite": 8.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 0.0, "total": 37.6, "desconto": 2.7852, "totalPagar": 34.8148, "equipa": [], "id": "h41", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-05-29", "ano": 2021, "semDia": 11.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h42", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-06-05", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.75, "desconto": 4.3519, "totalPagar": 54.3981, "equipa": [], "id": "h43", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-06-06", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h44", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-06-13", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h45", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-06-19", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h46", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-06-20", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h47", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-06-24", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 54.05, "desconto": 4.0037, "totalPagar": 50.0463, "equipa": [], "id": "h48", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-07-11", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h49", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-07-17", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h50", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-07-18", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h51", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-07-25", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h52", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-07-31", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h53", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-08-08", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h54", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-08-15", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h55", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-08-21", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h56", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-08-28", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h57", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-09-04", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h58", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-09-05", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h59", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-09-12", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h60", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-09-18", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h61", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-09-25", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h62", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-09-26", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h63", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-10-02", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h64", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-10-03", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h65", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-10-16", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h66", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-10-17", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h67", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-10-23", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h68", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-10-24", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h69", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-10-30", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h70", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-10-31", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h71", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-11-07", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h72", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-11-13", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h73", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-11-14", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h74", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-11-28", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h75", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-12-05", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h76", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-12-12", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h77", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-12-19", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h78", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "reforco", "tipo": "Ref. TNU", "data": "2021-12-26", "ano": 2021, "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 0.0, "palm": 0.0, "refeicao": 1.0, "total": 58.82, "desconto": 4.357, "totalPagar": 54.463, "equipa": [], "id": "h79", "inicio": "", "fim": "", "almjant": 0}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-01-10", "ano": 2022, "inicio": "16:35", "fim": "#01:20", "semDia": 6.5, "semNoite": 1.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 72.23, "desconto": 5.3504, "totalPagar": 66.8796, "equipa": ["Correia", "Prazeres", "Nelson Relva", "Rúben Santos"], "id": "h80", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-01-31", "ano": 2022, "inicio": "17:48", "fim": "#02:47", "semDia": 6.0, "semNoite": 3.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 82.07, "desconto": 6.0793, "totalPagar": 75.9907, "equipa": ["Correia", "Prazeres", "Vítor Bulcão", "Emeline Lopes"], "id": "h81", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Desportiva", "data": "2022-02-20", "ano": 2022, "inicio": "13:30", "fim": "19:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 71.365, "desconto": 5.2863, "totalPagar": 66.0787, "equipa": ["Adjunto", "Prazeres"], "id": "h82", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-02-23", "ano": 2022, "inicio": "17:15", "fim": "#8:30", "semDia": 6.5, "semNoite": 8.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 134.825, "desconto": 9.987, "totalPagar": 124.838, "equipa": ["Teixeira", "Prazeres", "Rúben Santos", "Emeline Lopes"], "id": "h83", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-03-31", "ano": 2022, "inicio": "16:45", "fim": "23:50", "semDia": 7.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 62.39, "desconto": 4.6215, "totalPagar": 57.7685, "equipa": ["Correia", "Oleksander", "Prazeres", "Rúben Santos"], "id": "h84", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Rally", "data": "2022-04-22", "ano": 2022, "inicio": "18:15", "fim": "22:15", "semDia": 4.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 46.18, "desconto": 3.4207, "totalPagar": 42.7593, "equipa": ["Prazeres", "Tiago Silva", "Beatriz Riscado", "Rúben Santos"], "id": "h85", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Rally", "data": "2022-04-23", "ano": 2022, "inicio": "08:00", "fim": "19:20", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 2.0, "total": 123.35, "desconto": 9.137, "totalPagar": 114.213, "equipa": ["Davide Medeiros", "Prazeres", "Tiago Silva", "Beatriz Riscado"], "id": "h86", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Ciclismo", "data": "2022-04-25", "ano": 2022, "inicio": "15:00", "fim": "18:35", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 41.125, "desconto": 3.0463, "totalPagar": 38.0787, "equipa": ["Prazeres", "Nelson Relva"], "id": "h87", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-04-26", "ano": 2022, "inicio": "12:30", "fim": "#02:30", "semDia": 11.5, "semNoite": 2.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 154.67, "desconto": 11.457, "totalPagar": 143.213, "equipa": ["Prazeres", "Alexandra Oliveira", "Tiago Silva", "Inês Oliveira"], "id": "h88", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Motocross", "data": "2022-04-30", "ano": 2022, "inicio": "10:40", "fim": "18:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 8.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 100.74, "desconto": 7.4622, "totalPagar": 93.2778, "equipa": ["Prazeres", "Patrícia Pereira"], "id": "h89", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-05-02", "ano": 2022, "inicio": "16:40", "fim": "#00:15", "semDia": 7.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 80.69, "desconto": 5.977, "totalPagar": 74.713, "equipa": ["Prazeres", "Ana Cebola", "Rúben Santos", "Inês Oliveira"], "id": "h90", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-05-09", "ano": 2022, "inicio": "07:25", "fim": "22:35", "semDia": 15.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 2.0, "total": 135.46, "desconto": 10.0341, "totalPagar": 125.4259, "equipa": ["Teixeira", "Prazeres", "Norberto Silva", "Alexandra Oliveira"], "id": "h91", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-05-09", "ano": 2022, "inicio": "17:20", "fim": "#14:50", "semDia": 13.5, "semNoite": 8.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 2.0, "total": 197.215, "desconto": 14.6085, "totalPagar": 182.6065, "equipa": ["Correia", "Teixeira", "Prazeres", "Vítor Bulcão"], "id": "h92", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-05-13", "ano": 2022, "inicio": "17:20", "fim": "#01:10", "semDia": 6.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 1.0, "palm": 0.0, "almjant": 1.0, "total": 70.915, "desconto": 5.253, "totalPagar": 65.662, "equipa": ["Correia", "Oleksander", "Prazeres", "Ana Cebola"], "id": "h93", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-05-29", "ano": 2022, "inicio": "07:45", "fim": "22:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 14.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 2.0, "total": 180.71, "desconto": 13.3859, "totalPagar": 167.3241, "equipa": ["Prazeres", "Inês Oliveira", "Ricardo Henriques", "Fábio Bett"], "id": "h94", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Gás", "data": "2022-05-31", "ano": 2022, "inicio": "17:00", "fim": "23:00", "semDia": 6.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 65.9, "desconto": 4.8815, "totalPagar": 61.0185, "equipa": ["Prazeres", "Alexandra Oliveira", "Vítor Bulcão", "Ricardo Henriques"], "id": "h95", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-06-03", "ano": 2022, "inicio": "17:35", "fim": "#2:40", "semDia": 6.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 2.5, "palm": 0.0, "almjant": 1.0, "total": 89.665, "desconto": 6.6419, "totalPagar": 83.0231, "equipa": ["Correia", "Prazeres", "Rúben Santos", "Ricardo Henriques"], "id": "h96", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac. Aeromédica", "data": "2022-06-04", "ano": 2022, "inicio": "07:00", "fim": "10:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 37.98, "desconto": 2.8133, "totalPagar": 35.1667, "equipa": ["Prazeres", "Nelson Relva"], "id": "h97", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-06-15", "ano": 2022, "inicio": "23:20", "fim": "#10H45", "semDia": 0.5, "semNoite": 0.0, "fdsDia": 2.5, "fdsNoite": 8.0, "palm": 1.0, "almjant": 0.0, "total": 131.055, "desconto": 9.7078, "totalPagar": 121.3472, "equipa": ["Teixeira", "Prazeres", "João Oliveira", "Emeline Lopes"], "id": "h98", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-06-16", "ano": 2022, "inicio": "09:45", "fim": "21:38", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 12.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 154.48, "desconto": 11.443, "totalPagar": 143.037, "equipa": ["Correia", "Prazeres", "Rúben Santos", "Emeline Lopes"], "id": "h99", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-06-27", "ano": 2022, "inicio": "09:05", "fim": "19:15", "semDia": 10.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 92.98, "desconto": 6.8874, "totalPagar": 86.0926, "equipa": ["Teixeira", "David Medeiros", "Prazeres", "André Pereira"], "id": "h100", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-07-27", "ano": 2022, "inicio": "15:46", "fim": "#05:00", "semDia": 8.5, "semNoite": 5.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 120.365, "desconto": 8.9159, "totalPagar": 111.4491, "equipa": ["Davide Medeiros", "Prazeres", "Luís Andrade", "Mariana Esteves"], "id": "h101", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-08-08", "ano": 2022, "inicio": "16:45", "fim": "#04:50", "semDia": 7.0, "semNoite": 5.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 108.44, "desconto": 8.0326, "totalPagar": 100.4074, "equipa": ["Davide Medeiros", "Prazeres", "Alexandra Oliveira", "Ricardo Henriques"], "id": "h102", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Desportiva", "data": "2022-08-13", "ano": 2022, "inicio": "08:21", "fim": "11:55", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.5, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 43.855, "desconto": 3.2485, "totalPagar": 40.6065, "equipa": ["Prazeres", "Patrícia Pereira"], "id": "h103", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ref. CB Semana Mar", "data": "2022-08-14", "ano": 2022, "inicio": "17:00", "fim": "19:20", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 2.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 19.48, "desconto": 1.443, "totalPagar": 18.037, "equipa": ["Prazeres"], "id": "h104", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-08-16", "ano": 2022, "inicio": "17:30", "fim": "#05:10", "semDia": 6.5, "semNoite": 5.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 126.43, "desconto": 9.3652, "totalPagar": 117.0648, "equipa": ["Prazeres", "Luís Andrade", "André Pereira"], "id": "h105", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-08-23", "ano": 2022, "inicio": "17:35", "fim": "#00:35", "semDia": 6.5, "semNoite": 0.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 76.39, "desconto": 5.6585, "totalPagar": 70.7315, "equipa": ["Prazeres", "Luís Serpa", "Géni Jorge", "Inês Oliveira"], "id": "h106", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-08-30", "ano": 2022, "inicio": "16:28", "fim": "#01:10", "semDia": 7.5, "semNoite": 1.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 91.81, "desconto": 6.8007, "totalPagar": 85.0093, "equipa": ["Prazeres", "Luís Serpa", "Luís Andrade", "Mariana Esteves"], "id": "h107", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-09-13", "ano": 2022, "inicio": "22:00", "fim": "#08:17", "semDia": 2.0, "semNoite": 8.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 92.31, "desconto": 6.8378, "totalPagar": 85.4722, "equipa": ["Adjunto", "São João/Prazeres", "Fábio Bettencourt", "Miguel Mário"], "id": "h108", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Gás", "data": "2022-09-16", "ano": 2022, "inicio": "16:00", "fim": "23:00", "semDia": 7.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 64.47, "desconto": 4.7756, "totalPagar": 59.6944, "equipa": ["Teixeira", "Prazeres", "Luís Serpa", "Mariana Esteves"], "id": "h109", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Líquidos", "data": "2022-09-28", "ano": 2022, "inicio": "19:30", "fim": "#07:30", "semDia": 4.5, "semNoite": 0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 45.245, "desconto": 3.3515, "totalPagar": 41.8935, "equipa": ["Oleksander", "Prazeres"], "id": "h110", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Gás", "data": "2021-01-25", "ano": 2021, "inicio": "17:30", "fim": "#2:30", "semDia": 6.5, "semNoite": 2.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 81.44, "desconto": 6.0326, "totalPagar": 75.4074, "equipa": ["Oleksander", "Prazeres", "Nelson Relva", "Géni Jorge"], "id": "h111", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Vac. COVID", "data": "2021-02-06", "ano": 2021, "inicio": "08:13", "fim": "14:10", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 6.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 67.91, "desconto": 5.0304, "totalPagar": 62.8796, "equipa": ["Prazeres", "Géni Jorge"], "id": "h112", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-02-09", "ano": 2021, "inicio": "13:36", "fim": "19:40", "semDia": 6.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 54.44, "desconto": 4.0326, "totalPagar": 50.4074, "equipa": ["São João", "Prazeres", "João Miguel"], "id": "h113", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-03-11", "ano": 2021, "inicio": "09:00", "fim": "18:00", "semDia": 9.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 78.29, "desconto": 5.7993, "totalPagar": 72.4907, "equipa": ["Davide Medeiros", "Oleksander", "Prazeres", "Luís Vargas"], "id": "h114", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Gás", "data": "2021-04-26", "ano": 2021, "inicio": "17:30", "fim": "#00:30", "semDia": 6.5, "semNoite": 0.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 63.02, "desconto": 4.6681, "totalPagar": 58.3519, "equipa": ["Oleksander", "Prazeres", "João Miguel", "Luís Vargas"], "id": "h115", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Motocross", "data": "2021-05-09", "ano": 2021, "inicio": "11:46", "fim": "17:46", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 6.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 77.24, "desconto": 5.7215, "totalPagar": 71.5185, "equipa": ["Carlos Medeiros", "Prazeres"], "id": "h116", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-05-11", "ano": 2021, "inicio": "18:15", "fim": "#03:35", "semDia": 6.0, "semNoite": 3.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 104.82, "desconto": 7.7644, "totalPagar": 97.0556, "equipa": ["Davide Medeiros", "Prazeres", "Ivo Cristo", "Alexandra Oliveira"], "id": "h117", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Ralie", "data": "2021-05-15", "ano": 2021, "inicio": "14:06", "fim": "17:41", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 41.125, "desconto": 3.0463, "totalPagar": 38.0787, "equipa": ["Prazeres", "Tiago Silva"], "id": "h118", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Motocross", "data": "2021-05-23", "ano": 2021, "inicio": "12:30", "fim": "18:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 60.31, "desconto": 4.4674, "totalPagar": 55.8426, "equipa": ["Prazeres", "Patrícia Pereira"], "id": "h119", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Gás", "data": "2021-05-24", "ano": 2021, "inicio": "20:30", "fim": "#3:20", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.5, "fdsNoite": 3.0, "palm": 0.0, "almjant": 0.0, "total": 71.59, "desconto": 5.303, "totalPagar": 66.287, "equipa": ["Carlos Medeiros", "Prazeres", "Nelson Relva", "Vítor Bulcão"], "id": "h120", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-05-26", "ano": 2021, "inicio": "21:40", "fim": "#05:40", "semDia": 2.5, "semNoite": 5.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 70.53, "desconto": 5.2244, "totalPagar": 65.3056, "equipa": ["Davide Medeiros", "Oleksander", "Prazeres", "Vítor Bulcão"], "id": "h121", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-06-08", "ano": 2021, "inicio": "08:00", "fim": "20:20", "semDia": 12.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 127.79, "desconto": 9.4659, "totalPagar": 118.3241, "equipa": ["Prazeres", "Ana Cebola", "Tiago Silva"], "id": "h122", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Gás", "data": "2021-06-25", "ano": 2021, "inicio": "02:00", "fim": "08:30", "semDia": 0.5, "semNoite": 6.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 61.965, "desconto": 4.59, "totalPagar": 57.375, "equipa": ["Davide Medeiros", "Prazeres", "Alexandra Oliveira", "Vítor Bulcão"], "id": "h123", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Vac. COVID", "data": "2021-06-26", "ano": 2021, "inicio": "08:31", "fim": "19:42", "semDia": 11.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 2.0, "total": 103.66, "desconto": 7.6785, "totalPagar": 95.9815, "equipa": ["Oleksander", "Prazeres"], "id": "h124", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Vac. COVID", "data": "2021-06-27", "ano": 2021, "inicio": "08:38", "fim": "19:57", "semDia": 11.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 2.0, "total": 103.66, "desconto": 7.6785, "totalPagar": 95.9815, "equipa": ["Oleksander", "Prazeres"], "id": "h125", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Ralie", "data": "2021-07-02", "ano": 2021, "inicio": "18:30", "fim": "22:30", "semDia": 4.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 46.18, "desconto": 3.4207, "totalPagar": 42.7593, "equipa": ["Adjto", "Prazeres", "Beatriz Riscado"], "id": "h126", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Vac. COVID", "data": "2021-07-10", "ano": 2021, "inicio": "08:30", "fim": "17:30", "semDia": 0.0, "semNoite": 9.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 92.36, "desconto": 6.8415, "totalPagar": 85.5185, "equipa": ["Prazeres", "Patrícia Pereira"], "id": "h127", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Vac. COVID", "data": "2021-07-16", "ano": 2021, "inicio": "13:40", "fim": "19:44", "semDia": 5.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 46.49, "desconto": 3.4437, "totalPagar": 43.0463, "equipa": ["Prazeres", "Tiago Silva"], "id": "h128", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Gás", "data": "2021-07-26", "ano": 2021, "inicio": "17:35", "fim": "#01:45", "semDia": 6.5, "semNoite": 1.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 87.51, "desconto": 6.4822, "totalPagar": 81.0278, "equipa": ["Prazeres", "João Miguel", "Ana Cebola", "Susana Silva"], "id": "h129", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-08-04", "ano": 2021, "inicio": "23:41", "fim": "#06:35", "semDia": 0, "semNoite": 7.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 64.47, "desconto": 4.7756, "totalPagar": 59.6944, "equipa": ["Adjto", "Oleksander", "Prazeres", "Beatriz Pereira"], "id": "h130", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-08-14", "ano": 2021, "inicio": null, "fim": null, "semDia": 0, "semNoite": 0, "fdsDia": 0, "fdsNoite": 0, "palm": 0, "almjant": 0, "total": 0.0, "desconto": 0.0, "totalPagar": 0.0, "equipa": [], "id": "h131", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-08-20", "ano": 2021, "inicio": null, "fim": null, "semDia": 0, "semNoite": 0, "fdsDia": 0, "fdsNoite": 0, "palm": 0, "almjant": 0, "total": 0.0, "desconto": 0.0, "totalPagar": 0.0, "equipa": [], "id": "h132", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-09-29", "ano": 2021, "inicio": "22:30", "fim": "#6:30", "semDia": 1.5, "semNoite": 6.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 87.07, "desconto": 6.4496, "totalPagar": 80.6204, "equipa": ["Prazeres", "Adjunto", "Oleksander", "Alexandra Oliveira"], "id": "h133", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-10-14", "ano": 2021, "inicio": "21:30", "fim": "#05:55", "semDia": 2.5, "semNoite": 5.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 85.81, "desconto": 6.3563, "totalPagar": 79.4537, "equipa": ["Prazeres", "Adjunto", "Oleksander", "Pedro Silva"], "id": "h134", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Motocross", "data": "2021-11-06", "ano": 2021, "inicio": "12:00", "fim": "17:10", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 55.44, "desconto": 4.1067, "totalPagar": 51.3333, "equipa": ["Prazeres", "Géni Jorge"], "id": "h135", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-12-06", "ano": 2021, "inicio": "16:30", "fim": "23:15", "semDia": 6.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 58.415, "desconto": 4.327, "totalPagar": 54.088, "equipa": ["Paulo Teixeira", "Prazeres", "Nelson Relva", "Beatriz Pereira"], "id": "h136", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção Líquidos", "data": "2021-12-16", "ano": 2021, "inicio": "16:46", "fim": "00:00", "semDia": 6.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 54.44, "desconto": 4.0326, "totalPagar": 50.4074, "equipa": ["Manuel Correia", "Oleksander", "Prazeres", "Beatriz Pereira"], "id": "h137", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-01-14", "ano": 2020, "inicio": "12:25", "fim": "23:25", "semDia": 11.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 100.93, "desconto": 7.4763, "totalPagar": 93.4537, "equipa": ["Teixeira", "Cláudio Remédios", "Prazeres", "Géni Jorge"], "id": "h138", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-02-25", "ano": 2020, "inicio": "16:25", "fim": "#05:50", "semDia": 7.5, "semNoite": 6.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 121.625, "desconto": 9.0093, "totalPagar": 112.6157, "equipa": ["Teixeira", "Prazeres", "João Oliveira", "Susana Silva"], "id": "h139", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Desp_ACA", "data": "2020-03-01", "ano": 2020, "inicio": "10:10", "fim": "17:50", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 8.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 100.74, "desconto": 7.4622, "totalPagar": 93.2778, "equipa": ["Prazeres", "Bruno Monteiro"], "id": "h140", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-05-04", "ano": 2020, "inicio": "17:00", "fim": "#04H00", "semDia": 7.0, "semNoite": 4.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 99.23, "desconto": 7.3504, "totalPagar": 91.8796, "equipa": ["Davide Medeiros", "Prazeres", "João Oliveira", "Vitor Bulcão"], "id": "h141", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-06-26", "ano": 2020, "inicio": "18:30", "fim": "23:10", "semDia": 4.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 38.54, "desconto": 2.8548, "totalPagar": 35.6852, "equipa": ["Correia", "Delmar Bettencourt", "Prazeres", "Ana Beatriz"], "id": "h142", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-06-27", "ano": 2020, "inicio": "08:30", "fim": "20:10", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 116.61, "desconto": 8.6378, "totalPagar": 107.9722, "equipa": ["Correia", "Oleksander", "Prazeres", "Ana Beatriz"], "id": "h143", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-07-13", "ano": 2020, "inicio": "16:30", "fim": "#02:30", "semDia": 7.5, "semNoite": 2.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 108.49, "desconto": 8.0363, "totalPagar": 100.4537, "equipa": ["Teixeira", "Cláudio Remédios", "Prazeres", "Vitor Bulcão"], "id": "h144", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Gás", "data": "2020-08-16", "ano": 2020, "inicio": "08:30", "fim": "17H00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 8.5, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 92.26, "desconto": 6.8341, "totalPagar": 85.4259, "equipa": ["Davide Medeiros", "Cláudio Remédios", "Prazeres", "Ana Beatriz"], "id": "h145", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-08-24", "ano": 2020, "inicio": "15:30", "fim": "22:02", "semDia": 6.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 73.56, "desconto": 5.4489, "totalPagar": 68.1111, "equipa": ["Correia", "Davide Medeiros", "Prazeres", "Ana Beatriz"], "id": "h146", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-08-29", "ano": 2020, "inicio": "00:30", "fim": "07:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 7.0, "palm": 1.0, "almjant": 0.0, "total": 90.23, "desconto": 6.6837, "totalPagar": 83.5463, "equipa": ["Correia", "Prazeres", "Luís Andrade", "Marco Oliveira"], "id": "h147", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-09-28", "ano": 2020, "inicio": "13:45", "fim": "#00:15", "semDia": 9.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 89.005, "desconto": 6.593, "totalPagar": 82.412, "equipa": ["Jorge Oliveira", "Carlos Medeiros", "Prazeres", "Susana Silva"], "id": "h148", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-10-16", "ano": 2020, "inicio": "16:30", "fim": "21:30", "semDia": 5.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 46.49, "desconto": 3.4437, "totalPagar": 43.0463, "equipa": ["Correia", "Nuno São João", "Prazeres", "Géni Jorge"], "id": "h149", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Ralie", "data": "2020-10-17", "ano": 2020, "inicio": "12:30", "fim": "19:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 6.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 76.79, "desconto": 5.6881, "totalPagar": 71.1019, "equipa": ["Hélio Neves", "Prazeres"], "id": "h150", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Traill", "data": "2020-10-29", "ano": 2020, "inicio": "08:43", "fim": "18:21", "semDia": 9.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 103.14, "desconto": 7.64, "totalPagar": 95.5, "equipa": ["Patrícia Pereira", "Prazeres"], "id": "h151", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Traill", "data": "2020-10-30", "ano": 2020, "inicio": "08:36", "fim": "16:44", "semDia": 8.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 88.35, "desconto": 6.5444, "totalPagar": 81.8056, "equipa": ["Davide Medeiros", "Prazeres"], "id": "h152", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2020-12-28", "ano": 2020, "inicio": "16:40", "fim": "21:45", "semDia": 5.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 56.04, "desconto": 4.1511, "totalPagar": 51.8889, "equipa": ["Prazeres", "Oleksander", "Nuno São João", "Tiago Silva"], "id": "h153", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-03-01", "ano": 2019, "inicio": "00:00", "fim": "04:00", "semDia": 0.0, "semNoite": 4.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 36.84, "desconto": 2.7289, "totalPagar": 34.1111, "equipa": ["Davide Medeiros", "Prazeres", "Alexandra Oliveira", "Susana Silva"], "id": "h154", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-03-19", "ano": 2019, "inicio": "22:00", "fim": "#01:30", "semDia": 2.0, "semNoite": 1.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 29.715, "desconto": 2.2011, "totalPagar": 27.5139, "equipa": ["Manuel Correia", "Oleksandr", "Prazeres", "Susana Silva"], "id": "h155", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Ciclismo", "data": "2019-04-14", "ano": 2019, "inicio": "09:30", "fim": "13:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 4.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 45.7, "desconto": 3.3852, "totalPagar": 42.3148, "equipa": ["Patrícia Pereira", "Prazeres"], "id": "h156", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Rali", "data": "2019-04-26", "ano": 2019, "inicio": "18:15", "fim": "20:06", "semDia": 2.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 22.64, "desconto": 1.677, "totalPagar": 20.963, "equipa": ["Carlos Medeiros", "Prazeres"], "id": "h157", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Rali", "data": "2019-04-27", "ano": 2019, "inicio": "09:00", "fim": "19:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 10.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 110.88, "desconto": 8.2133, "totalPagar": 102.6667, "equipa": ["Davide Medeiros", "Prazeres"], "id": "h158", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-05-23", "ano": 2019, "inicio": "09:00", "fim": "18:00", "semDia": 9.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 78.29, "desconto": 5.7993, "totalPagar": 72.4907, "equipa": ["Jorge Oliveira", "Delmar Bett.", "Prazeres", "Geni Jorge"], "id": "h159", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Azores_Trail_Run", "data": "2019-05-25", "ano": 2019, "inicio": "06:00", "fim": "#01:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 16.0, "fdsNoite": 3.0, "palm": 1.0, "almjant": 2.0, "total": 246.9, "desconto": 18.2889, "totalPagar": 228.6111, "equipa": ["Patrícia Pereira", "Prazeres"], "id": "h160", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-05-26", "ano": 2019, "inicio": "18:00", "fim": "#02:00", "semDia": 0.0, "semNoite": 2.0, "fdsDia": 6.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 83.6, "desconto": 6.1926, "totalPagar": 77.4074, "equipa": ["Manuel Correia", "Prazeres", "Elisabete Pamp.", "Ana Cebola"], "id": "h161", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac_Aero-Médica", "data": "2019-05-28", "ano": 2019, "inicio": "11:30", "fim": "14:00", "semDia": 2.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 31.39, "desconto": 2.3252, "totalPagar": 29.0648, "equipa": ["Patrícia Pereira", "Prazeres"], "id": "h162", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-06-19", "ano": 2019, "inicio": "17:00", "fim": "23:00", "semDia": 7.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 62.39, "desconto": 4.6215, "totalPagar": 57.7685, "equipa": [], "id": "h163", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-07-25", "ano": 2019, "inicio": "22:00", "fim": "#05:30", "semDia": 2.0, "semNoite": 5.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 66.555, "desconto": 4.93, "totalPagar": 61.625, "equipa": ["Jorge Oliveira", "Oleksandr", "Prazeres", "Luís Vargas"], "id": "h164", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Desportiva", "data": "2019-07-27", "ano": 2019, "inicio": "17:15", "fim": "19:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 2.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 26.22, "desconto": 1.9422, "totalPagar": 24.2778, "equipa": ["Prazeres", "Luís Vargas"], "id": "h165", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-07-29", "ano": 2019, "inicio": "21:00", "fim": "#05:15", "semDia": 3.0, "semNoite": 5.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 69.9, "desconto": 5.1778, "totalPagar": 64.7222, "equipa": ["Manuel Correia", "Patrícia Pereira", "Prazeres", "Jaime Feijó"], "id": "h166", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-08-10", "ano": 2019, "inicio": "17:30", "fim": "#00:25", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 6.0, "fdsNoite": 0.5, "palm": 0.0, "almjant": 1.0, "total": 71.43, "desconto": 5.2911, "totalPagar": 66.1389, "equipa": ["Manuel Correia", "Prazeres", "Marco Oliveira", "Jaime Feijó"], "id": "h167", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Remoção Cachalote", "data": "2019-08-13", "ano": 2019, "inicio": "12:30", "fim": "20:30", "semDia": 8.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 77.08, "desconto": 5.7096, "totalPagar": 71.3704, "equipa": ["2 CT", "Manuel Correia", "Prazeres", "Alexandra Oliv."], "id": "h168", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-08-23", "ano": 2019, "inicio": "18:00", "fim": "#03:00", "semDia": 6.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 3.0, "palm": 0.0, "almjant": 1.0, "total": 91.94, "desconto": 6.8104, "totalPagar": 85.1296, "equipa": ["Manuel Correia", "Patrícia Pereira", "Prazeres", "Ana Cebola"], "id": "h169", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Morro_C-Branco", "data": "2019-09-19", "ano": 2019, "inicio": "11:30", "fim": "16:30", "semDia": 5.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 46.49, "desconto": 3.4437, "totalPagar": 43.0463, "equipa": ["Carlos Medeiros", "Prazeres", "Délcio Dias", "João Oliveira"], "id": "h170", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-10-18", "ano": 2019, "inicio": "08:00", "fim": "17:00", "semDia": 9.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 81.02, "desconto": 6.0015, "totalPagar": 75.0185, "equipa": ["Manuel Correia", "Davide Medeiros", "Bruno Azevedo", "Prazeres"], "id": "h171", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac_Médica", "data": "2019-10-27", "ano": 2019, "inicio": "01:30", "fim": "03:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 2.0, "palm": 0.0, "almjant": 0.0, "total": 28.46, "desconto": 2.1081, "totalPagar": 26.3519, "equipa": ["Prazeres", "Pedro Silva"], "id": "h172", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac_Aero-Médica", "data": "2019-11-02", "ano": 2019, "inicio": "11:45", "fim": "15:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 35.25, "desconto": 2.6111, "totalPagar": 32.6389, "equipa": ["Prazeres", "Bruno Monteiro"], "id": "h173", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-11-05", "ano": 2019, "inicio": "20:00", "fim": "#03:00", "semDia": 4.0, "semNoite": 3.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 59.43, "desconto": 4.4022, "totalPagar": 55.0278, "equipa": ["Teixeira", "Nuno São João", "Prazeres", "Ana Cebola"], "id": "h174", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2019-11-09", "ano": 2019, "inicio": "09:00", "fim": "18:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 9.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 94.4, "desconto": 6.9926, "totalPagar": 87.4074, "equipa": ["Davide Medeiros", "Oleksandr", "Prazeres", "Susana Silva"], "id": "h175", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-01-09", "ano": 2018, "inicio": "22:30", "fim": "#07:30", "semDia": 1.5, "semNoite": 7.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 83.73, "desconto": 6.2022, "totalPagar": 77.5278, "equipa": ["Correia", "Riscado", "Prazeres", "Beatriz"], "id": "h176", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-01-20", "ano": 2018, "inicio": "21:00", "fim": "#14:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 9.0, "fdsNoite": 8.0, "palm": 1.0, "almjant": 1.0, "total": 197.13, "desconto": 15.1911, "totalPagar": 189.8889, "equipa": ["José Alberto", "Carina", "Prazeres", "Luís Vargas"], "id": "h177", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac. Médica", "data": "2018-02-12", "ano": 2018, "inicio": "09:45", "fim": "11:00", "semDia": 1.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 7.95, "desconto": 0, "totalPagar": 0, "equipa": ["Nuno São João", "Prazeres"], "id": "h178", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Desportiva", "data": "2018-02-18", "ano": 2018, "inicio": "10:40", "fim": "17:15", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 6.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 83.115, "desconto": 21.5752, "totalPagar": 269.6898, "equipa": ["Prazeres", "Luís Vargas"], "id": "h179", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Gás", "data": "2018-03-19", "ano": 2018, "inicio": "14:00", "fim": "21:00", "semDia": 7.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 62.39, "desconto": 0, "totalPagar": 0, "equipa": ["Teixeira", "Carlos Med.", "Prazeres", "Luís Vargas"], "id": "h180", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Motocross", "data": "2018-03-25", "ano": 2018, "inicio": "11:30", "fim": "18:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 6.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 65.18, "desconto": 0, "totalPagar": 0, "equipa": ["Patrícia Pereira", "Prazeres"], "id": "h181", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-04-16", "ano": 2018, "inicio": "03:00", "fim": "12:00", "semDia": 4.0, "semNoite": 5.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 80.58, "desconto": 0, "totalPagar": 0, "equipa": ["José Alberto", "São João", "Prazeres", "Vitor Bulcão"], "id": "h182", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-04-22", "ano": 2018, "inicio": "09:00", "fim": "17:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 8.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 84.66, "desconto": 23.4637, "totalPagar": 293.2963, "equipa": ["Correia", "João Oliveira", "Norberto", "Prazeres"], "id": "h183", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Desportiva", "data": "2018-04-25", "ano": 2018, "inicio": "14:00", "fim": "17:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 29.22, "desconto": 0, "totalPagar": 0, "equipa": ["Patrícia Pereira", "Prazeres"], "id": "h184", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-05-06", "ano": 2018, "inicio": "15:00", "fim": "#2:00", "semDia": 0.0, "semNoite": 2.0, "fdsDia": 9.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 112.82, "desconto": 0, "totalPagar": 0, "equipa": ["Teixeira", "David Medeiros", "Prazeres", "Elisabete Pamp."], "id": "h185", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac. Médica", "data": "2018-05-08", "ano": 2018, "inicio": "09:00", "fim": "11:00", "semDia": 2.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 19.72, "desconto": 0, "totalPagar": 0, "equipa": ["Prazeres", "Márcia Medeiros"], "id": "h186", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-05-16", "ano": 2018, "inicio": "10:00", "fim": "18:00", "semDia": 8.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 70.34, "desconto": 0, "totalPagar": 0, "equipa": ["Correia", "Sacha", "Prazeres", "Luís Medeiros"], "id": "h187", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Gás", "data": "2018-07-06", "ano": 2018, "inicio": "17:00", "fim": "23:00", "semDia": 6.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 54.44, "desconto": 13.0419, "totalPagar": 163.0231, "equipa": ["Paulo Pereira", "Sacha", "Prazeres", "Vitor Bulcão"], "id": "h188", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-07-17", "ano": 2018, "inicio": "16:30", "fim": "22:30", "semDia": 6.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 54.44, "desconto": 0, "totalPagar": 0, "equipa": ["Correia", "Patrícia Pereira", "Prazeres", "Alexandra Oliv."], "id": "h189", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-07-17", "ano": 2018, "inicio": "22:30", "fim": "#6:00", "semDia": 1.5, "semNoite": 6.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 67.185, "desconto": 0, "totalPagar": 0, "equipa": ["Correia", "São João", "Prazeres", "Luís Vargas"], "id": "h190", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Gás", "data": "2018-09-28", "ano": 2018, "inicio": "14:00", "fim": "20:00", "semDia": 6.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 54.44, "desconto": 15.4181, "totalPagar": 192.7269, "equipa": ["Davide Medeiros", "São João", "Patrícia Pereira", "Prazeres"], "id": "h191", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prova Peter ", "data": "2018-09-29", "ano": 2018, "inicio": "14:30", "fim": "18:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 4.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 38.96, "desconto": 0, "totalPagar": 0, "equipa": ["Correia", "Prazeres"], "id": "h192", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-10-01", "ano": 2018, "inicio": "17:00", "fim": "#1:30", "semDia": 7.0, "semNoite": 1.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 76.205, "desconto": 0, "totalPagar": 0, "equipa": ["Correia", "São João", "Norberto", "Prazeres"], "id": "h193", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Desentupimento", "data": "2018-10-08", "ano": 2018, "inicio": "16:30", "fim": "20:30", "semDia": 4.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 38.54, "desconto": 0, "totalPagar": 0, "equipa": ["Carlos Medeiros", "Prazeres"], "id": "h194", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-10-22", "ano": 2018, "inicio": "19:30", "fim": "#04:00", "semDia": 4.5, "semNoite": 4.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 79.355, "desconto": 16.6122, "totalPagar": 207.6528, "equipa": ["Jorge Oliveira", "João Oliveira", "Prazeres", "Géni Jorge"], "id": "h195", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Gás", "data": "2018-10-25", "ano": 2018, "inicio": "17:00", "fim": "#00:00", "semDia": 7.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 62.39, "desconto": 0, "totalPagar": 0, "equipa": ["Correia", "São João", "Prazeres", "Ana Catarina"], "id": "h196", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-11-11", "ano": 2018, "inicio": "08:00", "fim": "15:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 7.5, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 82.52, "desconto": 0, "totalPagar": 0, "equipa": ["Teixeira", "Sacha", "Prazeres", "Tiago Silva"], "id": "h197", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Ralie", "data": "2018-12-01", "ano": 2018, "inicio": "12:00", "fim": "17:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 60.31, "desconto": 0, "totalPagar": 0, "equipa": ["Davide Medeiros", "Prazeres", "Alexandra Med"], "id": "h198", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Líquidos", "data": "2018-12-17", "ano": 2018, "inicio": "21:30", "fim": "#11:00", "semDia": 5.5, "semNoite": 8.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 120.135, "desconto": 0, "totalPagar": 0, "equipa": ["Correia", "João Oliveira", "Prazeres", "Ana Cebola"], "id": "h199", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-01-10", "ano": 2017, "inicio": "21:40", "fim": "04:40", "semDia": 2.5, "semNoite": 4.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 53.465, "desconto": 3.9604, "totalPagar": 49.5046, "equipa": ["Correia", "J. Oliveira", "Emanuel Silva", "Prazeres"], "id": "h200", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac. Médica", "data": "2017-03-18", "ano": 2017, "inicio": "12:30", "fim": "15:16", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 33.96, "desconto": 2.5156, "totalPagar": 31.4444, "equipa": ["Hélio Neves", "Prazeres"], "id": "h201", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-03-25", "ano": 2017, "inicio": "07:30", "fim": "17:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 9.5, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 96.25, "desconto": 7.1296, "totalPagar": 89.1204, "equipa": ["Correia", "Riscado", "J. Alberto", "Prazeres"], "id": "h202", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac. Médica", "data": "2017-03-31", "ano": 2017, "inicio": "09:30", "fim": "10:40", "semDia": 1.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 11.175, "desconto": 0.8278, "totalPagar": 10.3472, "equipa": ["Patrícia", "Prazeres"], "id": "h203", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac. Médica", "data": "2017-04-04", "ano": 2017, "inicio": "08:00", "fim": "08:40", "semDia": 1.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 7.45, "desconto": 0.5519, "totalPagar": 6.8981, "equipa": ["Patrícia", "Prazeres"], "id": "h204", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evac. Médica", "data": "2017-04-13", "ano": 2017, "inicio": "08:49", "fim": "12:29", "semDia": 3.45, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 34.1725, "desconto": 2.5313, "totalPagar": 31.6412, "equipa": ["C. Medeiros", "Prazeres"], "id": "h205", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ciclismo", "data": "2017-04-25", "ano": 2017, "inicio": "09:45", "fim": "12:45", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 33.96, "desconto": 2.5156, "totalPagar": 31.4444, "equipa": ["Patrícia", "Prazeres"], "id": "h206", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ralie", "data": "2017-05-06", "ano": 2017, "inicio": "13:30", "fim": "18:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 52.44, "desconto": 3.8844, "totalPagar": 48.5556, "equipa": ["Patrícia", "Prazeres"], "id": "h207", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Gás", "data": "2017-05-13", "ano": 2017, "inicio": "10:00", "fim": "18:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 8.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 80.16, "desconto": 5.9378, "totalPagar": 74.2222, "equipa": ["José Alberto", "Riscado", "Paulo Pereira", "Prazeres"], "id": "h208", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-05-19", "ano": 2017, "inicio": "14:30", "fim": "21:30", "semDia": 7.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 64.63, "desconto": 4.7874, "totalPagar": 59.8426, "equipa": ["Paulo Pereira", "Prazeres", "Tiago Silva", "Vitor Bulcão"], "id": "h209", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ciclismo", "data": "2017-05-21", "ano": 2017, "inicio": "09:25", "fim": "12:25", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 33.96, "desconto": 2.5156, "totalPagar": 31.4444, "equipa": ["Patrícia", "Prazeres"], "id": "h210", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Motocross", "data": "2017-05-21", "ano": 2017, "inicio": "12:25", "fim": "16:25", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 4.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 43.2, "desconto": 3.2, "totalPagar": 40.0, "equipa": ["Patrícia", "Prazeres"], "id": "h211", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-05-27", "ano": 2017, "inicio": "08:00", "fim": "18:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 10.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 100.87, "desconto": 7.4719, "totalPagar": 93.3981, "equipa": ["Correia", "Ivo Cristo", "Prazeres", "Carlos Dias"], "id": "h212", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-06-11", "ano": 2017, "inicio": "11:00", "fim": "19:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 8.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 91.02, "desconto": 6.7422, "totalPagar": 84.2778, "equipa": ["José Alberto", "Riscado", "Prazeres", "E. Pamplona"], "id": "h213", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ralie", "data": "2017-06-16", "ano": 2017, "inicio": "18:30", "fim": "20:45", "semDia": 2.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 24.865, "desconto": 1.8419, "totalPagar": 23.0231, "equipa": ["Bruno Azevedo", "Prazeres"], "id": "h214", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ralie", "data": "2017-06-17", "ano": 2017, "inicio": "08:15", "fim": "18:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 10.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 100.87, "desconto": 7.4719, "totalPagar": 93.3981, "equipa": ["Bruno Azevedo", "Prazeres"], "id": "h215", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-06-19", "ano": 2017, "inicio": "02:00", "fim": "13:00", "semDia": 5.0, "semNoite": 6.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 97.98, "desconto": 7.2578, "totalPagar": 90.7222, "equipa": ["David Medeiros", "Riscado", "J. Alberto", "Prazeres"], "id": "h216", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ambulância-CB", "data": "2017-06-27", "ano": 2017, "inicio": "00:00", "fim": "01:20", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 0.0, "desconto": 0.0, "totalPagar": 0.0, "equipa": ["(aguentar lugar Carlos Medeiros-Aeroporto - 1hora não foi pago)"], "id": "h217", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-06-27", "ano": 2017, "inicio": "17:00", "fim": "#03:00", "semDia": 7.0, "semNoite": 3.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 84.52, "desconto": 6.2607, "totalPagar": 78.2593, "equipa": ["Correia", "Prazeres", "Carlos Dias", "Beatriz Risc."], "id": "h218", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Amb_Filme", "data": "2017-07-04", "ano": 2017, "inicio": "12:00", "fim": "20:30", "semDia": 8.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 75.805, "desconto": 5.6152, "totalPagar": 70.1898, "equipa": ["David Medeiros", "Prazeres"], "id": "h219", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-07-04", "ano": 2017, "inicio": "22:00", "fim": "#07:00", "semDia": 2.0, "semNoite": 7.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 82.11, "desconto": 6.0822, "totalPagar": 76.0278, "equipa": ["Correia", "Ivo Cristo", "Prazeres", "Beatriz Risc."], "id": "h220", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-07-09", "ano": 2017, "inicio": "17:00", "fim": "00:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 7.0, "fdsNoite": 0.5, "palm": 0.0, "almjant": 1.0, "total": 76.92, "desconto": 5.6978, "totalPagar": 71.2222, "equipa": ["Correia", "Prazeres", "E. Pamplona", "Beatriz Risc."], "id": "h221", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-08-12", "ano": 2017, "inicio": "08:45", "fim": "16:29", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 7.5, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 77.77, "desconto": 5.7607, "totalPagar": 72.0093, "equipa": ["Correia", "Ivo Cristo", "J. Alberto", "Prazeres"], "id": "h222", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev._Desportiva", "data": "2017-08-26", "ano": 2017, "inicio": "14:15", "fim": "18:15", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 4.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 43.2, "desconto": 3.2, "totalPagar": 40.0, "equipa": ["Patrícia", "Prazeres"], "id": "h223", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-09-04", "ano": 2017, "inicio": "21:30", "fim": "#04:15", "semDia": 2.5, "semNoite": 4.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 53.465, "desconto": 3.9604, "totalPagar": 49.5046, "equipa": ["José Alberto", "Correia", "Prazeres", "Beatriz Risc."], "id": "h224", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Motocross", "data": "2017-09-10", "ano": 2017, "inicio": "11:30", "fim": "16:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 52.44, "desconto": 3.8844, "totalPagar": 48.5556, "equipa": ["Patrícia", "Prazeres"], "id": "h225", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ambulância-CB", "data": "2017-09-21", "ano": 2017, "inicio": "16:00", "fim": "20:00", "semDia": 4.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 36.04, "desconto": 2.6696, "totalPagar": 33.3704, "equipa": ["C. Medeiros", "Prazeres", "Beatriz Risc."], "id": "h226", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-09-26", "ano": 2017, "inicio": "13:42", "fim": "00:00", "semDia": 10.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 80.74, "desconto": 5.9807, "totalPagar": 74.7593, "equipa": ["David Medeiros", "Delmar Bett.", "Emanuel Silva", "Prazeres"], "id": "h227", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-10-01", "ano": 2017, "inicio": "23:35", "fim": "#07:46", "semDia": 0.0, "semNoite": 8.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 80.16, "desconto": 5.9378, "totalPagar": 74.2222, "equipa": ["José Alberto", "Delmar Bett.", "Prazeres", "Beatriz Risc."], "id": "h228", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Liquidos", "data": "2017-10-07", "ano": 2017, "inicio": "13:30", "fim": "20:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 7.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 70.92, "desconto": 5.2533, "totalPagar": 65.6667, "equipa": ["Correia", "Delmar Bett.", "Paulo Pereira", "Prazeres"], "id": "h229", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ralie", "data": "2017-11-25", "ano": 2017, "inicio": "12:15", "fim": "17:45", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 68.115, "desconto": 5.0456, "totalPagar": 63.0694, "equipa": ["Prazeres", "Luís Vargas"], "id": "h230", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev_Gás", "data": "2017-12-28", "ano": 2017, "inicio": "22:00", "fim": "#07:30", "semDia": 2.0, "semNoite": 7.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 0.0, "total": 82.455, "desconto": 6.1078, "totalPagar": 76.3472, "equipa": ["Correia", "São João", "Prazeres", "E. Pamplona"], "id": "h231", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção", "data": "2016-02-12", "ano": 2016, "inicio": "15:30", "fim": "18:30", "semDia": 3.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 22.35, "desconto": 1.6556, "totalPagar": 20.6944, "equipa": [], "id": "h232", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção", "data": "2016-02-26", "ano": 2016, "inicio": "17:00", "fim": "# 06:30", "semDia": 7.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 6.3, "palm": 0.0, "almjant": 1.0, "total": 133.99, "desconto": 9.9252, "totalPagar": 124.0648, "equipa": [], "id": "h233", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção", "data": "2016-02-27", "ano": 2016, "inicio": "16:30", "fim": "23:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 7.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 70.92, "desconto": 5.2533, "totalPagar": 65.6667, "equipa": [], "id": "h234", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prevenção", "data": "2016-03-24", "ano": 2016, "inicio": "14:00", "fim": "22:00", "semDia": 8.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 72.08, "desconto": 5.3393, "totalPagar": 66.7407, "equipa": [], "id": "h235", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Gás", "data": "2016-04-19", "ano": 2016, "inicio": "21:00", "fim": "04:00", "semDia": 3.0, "semNoite": 4.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 63.43, "desconto": 4.6985, "totalPagar": 58.7315, "equipa": [], "id": "h236", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Evacuação", "data": "2016-04-21", "ano": 2016, "inicio": "08:15", "fim": "11:15", "semDia": 3.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 30.82, "desconto": 2.283, "totalPagar": 28.537, "equipa": [], "id": "h237", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-04-23", "ano": 2016, "inicio": "08:00", "fim": "18:48", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 2.0, "total": 116.35, "desconto": 8.6185, "totalPagar": 107.7315, "equipa": [], "id": "h238", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-04-23", "ano": 2016, "inicio": "17:48", "fim": "# 2:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 6.5, "fdsNoite": 2.5, "palm": 0.0, "almjant": 1.0, "total": 96.3, "desconto": 7.1333, "totalPagar": 89.1667, "equipa": [], "id": "h239", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ciclismo", "data": "2016-05-01", "ano": 2016, "inicio": "09:50", "fim": "12:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 3.5, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 38.58, "desconto": 2.8578, "totalPagar": 35.7222, "equipa": [], "id": "h240", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Rali", "data": "2016-05-07", "ano": 2016, "inicio": "11:00", "fim": "17:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 7.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 73.15, "desconto": 5.4185, "totalPagar": 67.7315, "equipa": [], "id": "h241", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-05-22", "ano": 2016, "inicio": "12:00", "fim": "14:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 2.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 24.72, "desconto": 1.8311, "totalPagar": 22.8889, "equipa": [], "id": "h242", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-05-22", "ano": 2016, "inicio": "20:00", "fim": "#03:00", "semDia": 0.0, "semNoite": 4.0, "fdsDia": 4.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 78.04, "desconto": 5.7807, "totalPagar": 72.2593, "equipa": [], "id": "h243", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-05-23", "ano": 2016, "inicio": "03:00", "fim": "12:00", "semDia": 4.0, "semNoite": 5.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 73.35, "desconto": 5.4333, "totalPagar": 67.9167, "equipa": [], "id": "h244", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-06-15", "ano": 2016, "inicio": "18:30", "fim": "22:30", "semDia": 4.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 36.04, "desconto": 2.6696, "totalPagar": 33.3704, "equipa": [], "id": "h245", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-06-18", "ano": 2016, "inicio": "12:30", "fim": "#30:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 11.5, "fdsNoite": 3.0, "palm": 0.0, "almjant": 2.0, "total": 154.74, "desconto": 11.4622, "totalPagar": 143.2778, "equipa": [], "id": "h246", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Gás", "data": "2016-06-19", "ano": 2016, "inicio": "05:30", "fim": "15:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 7.0, "fdsNoite": 2.5, "palm": 1.0, "almjant": 1.0, "total": 103.15, "desconto": 7.6407, "totalPagar": 95.5093, "equipa": [], "id": "h247", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-06-24", "ano": 2016, "inicio": "11:30", "fim": "16:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 52.44, "desconto": 3.8844, "totalPagar": 48.5556, "equipa": [], "id": "h248", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Ciclismo", "data": "2016-06-26", "ano": 2016, "inicio": "09:30", "fim": "14:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 52.44, "desconto": 3.8844, "totalPagar": 48.5556, "equipa": [], "id": "h249", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-07-01", "ano": 2016, "inicio": "19:30", "fim": "#3:00", "semDia": 4.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 2.5, "palm": 0.0, "almjant": 1.0, "total": 69.765, "desconto": 5.1678, "totalPagar": 64.5972, "equipa": [], "id": "h250", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Tourada", "data": "2016-07-03", "ano": 2016, "inicio": "16:30", "fim": "18:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 1.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 9.24, "desconto": 0.6844, "totalPagar": 8.5556, "equipa": [], "id": "h251", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-07-11", "ano": 2016, "inicio": "16:00", "fim": "#02:00", "semDia": 8.0, "semNoite": 2.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 83.26, "desconto": 6.1674, "totalPagar": 77.0926, "equipa": [], "id": "h252", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-07-22", "ano": 2016, "inicio": "17:00", "fim": "22:00", "semDia": 5.0, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 43.49, "desconto": 3.2215, "totalPagar": 40.2685, "equipa": [], "id": "h253", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-08-13", "ano": 2016, "inicio": "21:45", "fim": "#05:45", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 2.0, "fdsNoite": 5.0, "palm": 0.0, "almjant": 0.0, "total": 78.48, "desconto": 5.8133, "totalPagar": 72.6667, "equipa": [], "id": "h254", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-08-26", "ano": 2016, "inicio": "16:30", "fim": "#02:00", "semDia": 5.5, "semNoite": 2.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 64.635, "desconto": 4.7878, "totalPagar": 59.8472, "equipa": [], "id": "h255", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Motocross", "data": "2016-09-11", "ano": 2016, "inicio": "12:30", "fim": "16:30", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 4.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 36.96, "desconto": 2.7378, "totalPagar": 34.2222, "equipa": [], "id": "h256", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-10-08", "ano": 2016, "inicio": "14:30", "fim": "22:00", "semDia": 7.5, "semNoite": 0.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 1.0, "total": 62.115, "desconto": 4.6011, "totalPagar": 57.5139, "equipa": [], "id": "h257", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-10-09", "ano": 2016, "inicio": "08:00", "fim": "17:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 9.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 91.63, "desconto": 6.7874, "totalPagar": 84.8426, "equipa": [], "id": "h258", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Gás", "data": "2016-10-19", "ano": 2016, "inicio": "21:00", "fim": "#04:00", "semDia": 3.0, "semNoite": 4.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 57.19, "desconto": 4.2363, "totalPagar": 52.9537, "equipa": [], "id": "h259", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Motocross", "data": "2016-10-30", "ano": 2016, "inicio": "12:00", "fim": "18:00", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 6.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 67.92, "desconto": 5.0311, "totalPagar": 62.8889, "equipa": [], "id": "h260", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Cadáver", "data": "2016-11-01", "ano": 2016, "inicio": "23:00", "fim": "23:59", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 1.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 12.0, "desconto": 0.8889, "totalPagar": 11.1111, "equipa": [], "id": "h261", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Líquidos", "data": "2016-11-11", "ano": 2016, "inicio": "02:30", "fim": "14:00", "semDia": 6.0, "semNoite": 5.5, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 1.0, "almjant": 1.0, "total": 101.075, "desconto": 7.487, "totalPagar": 93.588, "equipa": [], "id": "h262", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Prev. Gás", "data": "2016-11-16", "ano": 2016, "inicio": "22:00", "fim": "#06:00", "semDia": 2.0, "semNoite": 6.0, "fdsDia": 0.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 67.16, "desconto": 4.9748, "totalPagar": 62.1852, "equipa": [], "id": "h263", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Rali", "data": "2016-11-19", "ano": 2016, "inicio": "12:25", "fim": "17:15", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 5.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 0.0, "total": 46.2, "desconto": 3.4222, "totalPagar": 42.7778, "equipa": [], "id": "h264", "refeicao": 0, "grau": "pracas"}, {"categoria": "prevencao", "tipo": "Motocross", "data": "2016-11-27", "ano": 2016, "inicio": "10:15", "fim": "19:15", "semDia": 0.0, "semNoite": 0.0, "fdsDia": 9.0, "fdsNoite": 0.0, "palm": 0.0, "almjant": 2.0, "total": 95.64, "desconto": 7.0844, "totalPagar": 88.5556, "equipa": [], "id": "h265", "refeicao": 0, "grau": "pracas"}, {"categoria": "reforco", "tipo": "Reforço TNU", "data": "2019-10-12", "ano": 2019, "semDia": 12.0, "semNoite": 0, "fdsDia": 0, "fdsNoite": 0, "palm": 0, "refeicao": 0, "total": 42.0, "desconto": 3.1111, "totalPagar": 38.8889, "equipa": [], "id": "h266", "inicio": "", "fim": "", "almjant": 0}], "rates": {"prevencao": {"2016": {"pracas": {"semDia": 7.45, "semNoite": 8.71, "fdsDia": 9.24, "fdsNoite": 12.0, "palm": 2.23, "almjant": 6.24}, "chefe": {"semDia": 9.36, "semNoite": 10.62, "fdsDia": 11.25, "fdsNoite": 13.73, "palm": 2.23, "almjant": 6.24}, "fator": 1.08}, "2017": {"pracas": {"semDia": 7.45, "semNoite": 8.71, "fdsDia": 9.24, "fdsNoite": 12.0, "palm": 2.23, "almjant": 6.24}, "chefe": {"semDia": 9.36, "semNoite": 10.62, "fdsDia": 11.25, "fdsNoite": 13.73, "palm": 2.23, "almjant": 6.24}, "fator": 1.08}, "2018": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}, "2019": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}, "2020": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}, "2021": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}, "2022": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}}, "reforco": {"2021": {"semDia": 4.7, "semNoite": 4.7, "fdsDia": 4.7, "fdsNoite": 4.7, "palm": 0, "refeicao": 4.77, "fator": 1.08}, "2022": {"semDia": 4.7, "semNoite": 4.7, "fdsDia": 4.7, "fdsNoite": 4.7, "palm": 0, "refeicao": 4.77, "fator": 1.08}}}};
+const SEED = {"records": [], "rates": {"prevencao": {"2016": {"pracas": {"semDia": 7.45, "semNoite": 8.71, "fdsDia": 9.24, "fdsNoite": 12.0, "palm": 2.23, "almjant": 6.24}, "chefe": {"semDia": 9.36, "semNoite": 10.62, "fdsDia": 11.25, "fdsNoite": 13.73, "palm": 2.23, "almjant": 6.24}, "fator": 1.08}, "2017": {"pracas": {"semDia": 7.45, "semNoite": 8.71, "fdsDia": 9.24, "fdsNoite": 12.0, "palm": 2.23, "almjant": 6.24}, "chefe": {"semDia": 9.36, "semNoite": 10.62, "fdsDia": 11.25, "fdsNoite": 13.73, "palm": 2.23, "almjant": 6.24}, "fator": 1.08}, "2018": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}, "2019": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}, "2020": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}, "2021": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}, "2022": {"pracas": {"semDia": 7.95, "semNoite": 9.21, "fdsDia": 9.74, "fdsNoite": 12.5, "palm": 2.73, "almjant": 6.74}, "chefe": {"semDia": 9.86, "semNoite": 11.12, "fdsDia": 11.75, "fdsNoite": 14.23, "palm": 2.73, "almjant": 6.74}, "fator": 1.08}}, "reforco": {"2021": {"semDia": 4.7, "semNoite": 4.7, "fdsDia": 4.7, "fdsNoite": 4.7, "palm": 0, "refeicao": 4.77, "fator": 1.08}, "2022": {"semDia": 4.7, "semNoite": 4.7, "fdsDia": 4.7, "fdsNoite": 4.7, "palm": 0, "refeicao": 4.77, "fator": 1.08}}}};
 
-const STORAGE_KEY = 'pr_app_v1';
+const LEGACY_KEY = 'pr_app_v1';      // dados guardados pela versão anterior (sem contas)
+const CACHE_PREFIX = 'pr_app_v2_';  // cópia local, uma por utilizador
+const DIRTY_PREFIX = 'pr_dirty_';
 
-function loadState(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(raw){
-    try{ return JSON.parse(raw); }catch(e){}
-  }
-  return JSON.parse(JSON.stringify(SEED));
+function defaultState(){ return JSON.parse(JSON.stringify(SEED)); }
+let state = defaultState();
+let currentUser = null;
+
+function cacheKey(){ return currentUser ? CACHE_PREFIX + currentUser.uid : null; }
+function loadCache(){
+  const k = cacheKey(); if(!k) return null;
+  try{
+    const s = JSON.parse(localStorage.getItem(k) || 'null');
+    return (s && Array.isArray(s.records) && s.rates) ? s : null;
+  }catch(e){ return null; }
 }
 function saveState(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  if(typeof pushSyncNow === 'function') pushSyncNow();
+  const k = cacheKey();
+  if(!k) return;                       // sem sessão: nunca grava nada
+  localStorage.setItem(k, JSON.stringify(state));
+  pushSync();
 }
-let state = loadState();
 
 function toast(msg){
   const t = document.getElementById('toast');
@@ -680,6 +678,28 @@ function ratesFor(categoria, ano, grau){
   return cat[y];
 }
 
+const CATS = {
+  reforco:{label:'Reforço', plural:'Reforços'},
+  prevencao:{label:'Prevenção', plural:'Prevenções'},
+  aeroporto:{label:'Aeroporto', plural:'Aeroporto'}
+};
+const CAT_KEYS = ['reforco','prevencao','aeroporto'];
+function isSimple(c){ return c==='aeroporto'; }   // valor à hora (Aeroporto ou Prolongamento)
+function simpleRate(rt, sub){ return rt ? ((sub==='prolongamento' ? rt.horaProl : rt.hora)||0) : 0; }
+let formSub = 'normal';
+function catLabel(c){ return (CATS[c]||CATS.prevencao).label; }
+function catPlural(c){ return c ? (CATS[c]||CATS.prevencao).plural : 'Todas as categorias'; }
+function hoursOf(r){ return (r.semDia||0)+(r.semNoite||0)+(r.fdsDia||0)+(r.fdsNoite||0)+(r.horas||0); }
+function pagarOf(r){ const c = calcForRecord(r); return c ? c.totalPagar : (r.total||0)/1.08; }
+function sumByCat(recs){
+  const t = {reforco:0, prevencao:0, aeroporto:0, tot:0};
+  recs.forEach(r=>{ const p = pagarOf(r); const k = r.categoria==='prolongamento' ? 'aeroporto' : ((r.categoria in t) ? r.categoria : 'prevencao'); t[k]+=p; t.tot+=p; });
+  return t;
+}
+function barSegs(t, max){
+  return CAT_KEYS.map(k=>`<div class="bar-seg ${k}" style="width:${(t[k]/max*100).toFixed(1)}%"></div>`).join('');
+}
+
 function calcForRecord(r){
   // Prefer the value stored on the record (accurate historical bookkeeping,
   // including any manual corrections from the original spreadsheet).
@@ -693,6 +713,12 @@ function calcForRecord(r){
 function computeCalc(categoria, ano, h, grau){
   const r = ratesFor(categoria, ano, grau);
   if(!r) return null;
+  if(isSimple(categoria)){
+    const total = (h.horas||0) * simpleRate(r, h.sub);
+    const fator = r.fator || 1.08;
+    const totalPagar = total / fator;
+    return {total, desconto: total-totalPagar, totalPagar, fator, rateUsed: r};
+  }
   const mealField = categoria==='reforco' ? 'refeicao' : 'almjant';
   const total = (h.semDia*r.semDia) + (h.semNoite*r.semNoite) + (h.fdsDia*r.fdsDia) + (h.fdsNoite*r.fdsNoite) + (h.palm*r.palm) + (h[mealField]*r[mealField]);
   const fator = r.fator || 1.08;
@@ -704,6 +730,7 @@ function computeCalc(categoria, ano, h, grau){
 /* ============ DASHBOARD ============ */
 function allYears(){
   const ys = new Set(state.records.map(r=>r.ano));
+  ys.add(new Date().getFullYear());
   Object.values(state.rates).forEach(cat=>Object.keys(cat).forEach(y=>ys.add(Number(y))));
   return Array.from(ys).sort((a,b)=>b-a);
 }
@@ -714,7 +741,9 @@ function populateYearSelects(){
   const filtSel = document.getElementById('filtAno');
   const cur = dashSel.value;
   dashSel.innerHTML = '<option value="all">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
-  dashSel.value = cur && [...dashSel.options].some(o=>o.value===cur) ? cur : (years[0]||'all');
+  const recYears = state.records.map(r=>r.ano).filter(Boolean);
+  const defYear = String(recYears.length ? Math.max(...recYears) : new Date().getFullYear());
+  dashSel.value = cur && [...dashSel.options].some(o=>o.value===cur) ? cur : defYear;
   const curF = filtSel.value;
   filtSel.innerHTML = '<option value="">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
   filtSel.value = [...filtSel.options].some(o=>o.value===curF) ? curF : '';
@@ -740,37 +769,21 @@ function renderDashboard(){
   const sel = document.getElementById('dashYear').value;
   const recs = state.records.filter(r=> sel==='all' ? true : r.ano===Number(sel));
 
-  let reforco=0, prevencao=0;
-  recs.forEach(r=>{
-    const c = calcForRecord(r);
-    const pagar = c ? c.totalPagar : r.total/1.08;
-    if(r.categoria==='reforco') reforco+=pagar; else prevencao+=pagar;
-  });
-  document.getElementById('kpiReforco').textContent = euro(reforco);
-  document.getElementById('kpiPrevencao').textContent = euro(prevencao);
-  document.getElementById('kpiTotal').textContent = euro(reforco+prevencao);
+  const T = sumByCat(recs);
+  document.getElementById('kpiReforco').textContent = euro(T.reforco);
+  document.getElementById('kpiPrevencao').textContent = euro(T.prevencao);
+  document.getElementById('kpiAeroporto').textContent = euro(T.aeroporto);
+  document.getElementById('kpiTotal').textContent = euro(T.tot);
 
   // bars per year
   const years = allYears().filter(y=>state.records.some(r=>r.ano===y)).sort((a,b)=>b-a);
-  const totals = years.map(y=>{
-    let rf=0, pv=0;
-    state.records.filter(r=>r.ano===y).forEach(r=>{
-      const c = calcForRecord(r);
-      const pagar = c ? c.totalPagar : r.total/1.08;
-      if(r.categoria==='reforco') rf+=pagar; else pv+=pagar;
-    });
-    return {y, rf, pv, tot: rf+pv};
-  });
+  const totals = years.map(y=>Object.assign({y}, sumByCat(state.records.filter(r=>r.ano===y))));
   const max = Math.max(1, ...totals.map(t=>t.tot));
-  document.getElementById('yearBars').innerHTML = totals.map(t=>{
-    const wr = (t.rf/max*100).toFixed(1);
-    const wp = (t.pv/max*100).toFixed(1);
-    return `<div class="bar-row">
+  document.getElementById('yearBars').innerHTML = totals.map(t=>`<div class="bar-row">
       <div>${t.y}</div>
-      <div class="bar-track"><div class="bar-seg reforco" style="width:${wr}%"></div><div class="bar-seg prevencao" style="width:${wp}%"></div></div>
+      <div class="bar-track">${barSegs(t,max)}</div>
       <div class="bar-amt">${euro(t.tot)}</div>
-    </div>`;
-  }).join('') || '<div class="empty-msg">Sem registos</div>';
+    </div>`).join('') || '<div class="empty-msg">Sem registos</div>';
 
   // bars per month (only meaningful for a single selected year)
   const monthCard = document.getElementById('monthCard');
@@ -781,25 +794,14 @@ function renderDashboard(){
     const anoSel = Number(sel);
     document.getElementById('monthCardTitle').textContent = `Total a pagar por mês — ${anoSel}`;
     const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-    const monthTotals = MESES.map((nome, idx)=>{
-      let rf=0, pv=0;
-      state.records.filter(r=> r.ano===anoSel && r.data && (parseInt(r.data.slice(5,7))-1)===idx ).forEach(r=>{
-        const c = calcForRecord(r);
-        const pagar = c ? c.totalPagar : r.total/1.08;
-        if(r.categoria==='reforco') rf+=pagar; else pv+=pagar;
-      });
-      return {nome, rf, pv, tot: rf+pv};
-    });
+    const monthTotals = MESES.map((nome, idx)=>Object.assign({nome}, sumByCat(
+      state.records.filter(r=> r.ano===anoSel && r.data && (parseInt(r.data.slice(5,7))-1)===idx))));
     const maxM = Math.max(1, ...monthTotals.map(t=>t.tot));
-    document.getElementById('monthBars').innerHTML = monthTotals.map(t=>{
-      const wr = (t.rf/maxM*100).toFixed(1);
-      const wp = (t.pv/maxM*100).toFixed(1);
-      return `<div class="bar-row">
+    document.getElementById('monthBars').innerHTML = monthTotals.map(t=>`<div class="bar-row">
         <div>${t.nome}</div>
-        <div class="bar-track"><div class="bar-seg reforco" style="width:${wr}%"></div><div class="bar-seg prevencao" style="width:${wp}%"></div></div>
+        <div class="bar-track">${barSegs(t,maxM)}</div>
         <div class="bar-amt">${t.tot>0?euro(t.tot):'—'}</div>
-      </div>`;
-    }).join('');
+      </div>`).join('');
   }
 
   // recent
@@ -820,8 +822,8 @@ function histItemHtml(r){
   const c = calcForRecord(r);
   const pagar = c ? c.totalPagar : r.total/1.08;
   const equipaLine = (r.equipa && r.equipa.length) ? r.equipa.join(', ') : '';
-  const grauLabel = r.categoria==='prevencao' ? (r.grau==='chefe'?'Chefe':'Praça') : '';
-  const horas = (r.semDia||0)+(r.semNoite||0)+(r.fdsDia||0)+(r.fdsNoite||0);
+  const grauLabel = r.categoria==='prevencao' ? (r.grau==='chefe'?'Chefe':'Praça') : (r.sub==='prolongamento' ? 'Prolongamento' : '');
+  const horas = hoursOf(r);
   const horasTxt = `${Math.round(horas*100)/100}h`;
   const breakdown = horasBreakdown(r);
   return `<div class="hist-item" onclick="openDetail('${r.id}')">
@@ -833,7 +835,7 @@ function histItemHtml(r){
     </div>
     <div class="hist-amt">
       <div class="val">${euro(pagar)}</div>
-      <span class="tag-cat ${r.categoria}">${r.categoria==='reforco'?'Reforço':'Prevenção'}${grauLabel?' · '+grauLabel:''}</span>
+      <span class="tag-cat ${r.categoria}">${catLabel(r.categoria)}${grauLabel?' · '+grauLabel:''}</span>
     </div>
   </div>`;
 }
@@ -909,7 +911,7 @@ function renderPesquisa(){
   recs.forEach(r=>{
     const c = calcForRecord(r);
     totalPagar += c ? c.totalPagar : r.total/1.08;
-    totalHoras += (r.semDia||0)+(r.semNoite||0)+(r.fdsDia||0)+(r.fdsNoite||0);
+    totalHoras += hoursOf(r);
   });
 
   document.getElementById('pesqHoras').textContent = `${Math.round(totalHoras*100)/100}h`;
@@ -929,17 +931,23 @@ function openDetail(id){
   const mealVal = r.categoria==='reforco' ? (r.refeicao||0) : (r.almjant||0);
   let html = '';
   html += row('Tipo', r.tipo);
-  html += row('Categoria', r.categoria==='reforco'?'Reforço':'Prevenção / Descarga');
+  html += row('Categoria', r.categoria==='prevencao' ? 'Prevenção / Descarga' : catLabel(r.categoria));
+  if(isSimple(r.categoria)) html += row('Serviço', r.sub==='prolongamento' ? 'Prolongamento' : 'Aeroporto');
   if(r.categoria==='prevencao') html += row('Grau', r.grau==='chefe'?'Chefe':'Praça');
   html += row('Data', formatDatePT(r.data));
   if(r.inicio) html += row('Início', r.inicio);
   if(r.fim) html += row('Fim', r.fim);
-  const totalHoras = (r.semDia||0)+(r.semNoite||0)+(r.fdsDia||0)+(r.fdsNoite||0);
+  const totalHoras = hoursOf(r);
   html += row('Horas feitas', `${Math.round(totalHoras*100)/100}h`);
-  html += row('Semana dia / noite', `${r.semDia||0}h / ${r.semNoite||0}h`);
-  html += row('Fim-de-semana dia / noite', `${r.fdsDia||0}h / ${r.fdsNoite||0}h`);
-  html += row('Pequeno-almoço', r.palm||0);
-  html += row(mealField, mealVal);
+  if(isSimple(r.categoria)){
+    const rt = ratesFor(r.categoria, r.ano);
+    if(rt) html += row('Valor à hora', euro(simpleRate(rt, r.sub)));
+  } else {
+    html += row('Semana dia / noite', `${r.semDia||0}h / ${r.semNoite||0}h`);
+    html += row('Fim-de-semana dia / noite', `${r.fdsDia||0}h / ${r.fdsNoite||0}h`);
+    html += row('Pequeno-almoço', r.palm||0);
+    html += row(mealField, mealVal);
+  }
   if(r.equipa && r.equipa.length) html += row('Equipa', r.equipa.join(', '));
   html += row('Total bruto', euro(c.total));
   html += row('Desconto', euro(c.desconto));
@@ -956,6 +964,13 @@ let formType = 'reforco';
 let formGrau = 'pracas';
 let equipaList = [];
 
+function setSub(v){
+  formSub = v;
+  document.getElementById('subNormal').classList.toggle('active', v==='normal');
+  document.getElementById('subProl').classList.toggle('active', v==='prolongamento');
+  updatePreview();
+}
+
 function setGrau(g){
   formGrau = g;
   document.getElementById('grauPracas').classList.toggle('active', g==='pracas');
@@ -966,6 +981,7 @@ function setGrau(g){
 function openForm(type, editId){
   formType = type;
   formGrau = 'pracas';
+  formSub = 'normal';
   equipaList = [];
   document.getElementById('editId').value = editId || '';
   document.getElementById('formDeleteBtn').style.display = editId ? 'block' : 'none';
@@ -983,9 +999,12 @@ function openForm(type, editId){
     document.getElementById('f_fdsDia').value = r.fdsDia||0;
     document.getElementById('f_fdsNoite').value = r.fdsNoite||0;
     document.getElementById('f_palm').value = r.palm||0;
+    document.getElementById('f_horas').value = r.horas||0;
     equipaList = (r.equipa||[]).slice();
     formType = r.categoria;
     formGrau = r.grau || 'pracas';
+    formSub = r.sub || (r.categoria==='prolongamento' ? 'prolongamento' : 'normal');
+    if(r.categoria==='prolongamento') formType = 'aeroporto';
   } else {
     document.getElementById('f_tipo').value = '';
     document.getElementById('f_data').value = new Date().toISOString().slice(0,10);
@@ -996,9 +1015,11 @@ function openForm(type, editId){
     document.getElementById('f_fdsDia').value = 0;
     document.getElementById('f_fdsNoite').value = 0;
     document.getElementById('f_palm').value = 0;
+    document.getElementById('f_horas').value = 0;
   }
   switchFormType(formType, editId);
   setGrau(formGrau);
+  setSub(formSub);
   document.getElementById('f_refeicao').value = editId ? (state.records.find(x=>x.id===editId)[formType==='reforco'?'refeicao':'almjant']||0) : 0;
   renderEquipaTags();
   updatePreview();
@@ -1008,16 +1029,23 @@ function closeForm(){ document.getElementById('formModalBg').classList.remove('s
 
 function switchFormType(type){
   formType = type;
-  document.getElementById('segReforco').classList.toggle('active', type==='reforco');
-  document.getElementById('segPrevencao').classList.toggle('active', type==='prevencao');
+  CAT_KEYS.forEach(k=>{
+    const el = document.getElementById('seg'+k.charAt(0).toUpperCase()+k.slice(1));
+    if(el) el.classList.toggle('active', type===k);
+  });
   const isPrev = type==='prevencao';
+  const simple = isSimple(type);
   document.getElementById('wrap_inicio').style.display = 'block';
   document.getElementById('wrap_fim_row').style.display = 'grid';
+  document.getElementById('wrap_feriado').style.display = simple ? 'none' : 'flex';
+  document.getElementById('wrap_blocos').style.display = simple ? 'none' : 'block';
+  document.getElementById('wrap_horas').style.display = simple ? 'block' : 'none';
+  document.getElementById('wrap_subtipo').style.display = simple ? 'block' : 'none';
   document.getElementById('wrap_equipa').style.display = isPrev ? 'block' : 'none';
   document.getElementById('wrap_grau').style.display = isPrev ? 'block' : 'none';
   document.getElementById('autoHoursHint').style.display = 'block';
   document.getElementById('wrap_refeicao_label').querySelector('label').textContent = isPrev ? 'Almoço/Jantar (nº)' : 'Refeição (nº)';
-  document.getElementById('formSaveBtn').className = 'btn btn-primary' + (type==='reforco' ? ' reforco' : '');
+  document.getElementById('formSaveBtn').className = 'btn btn-primary' + (type!=='prevencao' ? ' '+type : '');
   updatePreview();
 }
 
@@ -1042,6 +1070,8 @@ function readFormHours(){
     palm: parseFloat(document.getElementById('f_palm').value)||0,
     refeicao: parseFloat(document.getElementById('f_refeicao').value)||0,
     almjant: parseFloat(document.getElementById('f_refeicao').value)||0,
+    horas: parseFloat(document.getElementById('f_horas').value)||0,
+    sub: formSub,
   };
 }
 
@@ -1082,6 +1112,16 @@ function autoCalcHours(){
   const inicio = document.getElementById('f_inicio').value;
   const fim = document.getElementById('f_fim').value;
   const feriado = document.getElementById('f_feriado').checked;
+  if(isSimple(formType)){
+    if(data && inicio && fim){
+      const st = new Date(data+'T'+inicio+':00');
+      let en = new Date(data+'T'+fim+':00');
+      if(en <= st) en = new Date(en.getTime() + 24*3600*1000);
+      document.getElementById('f_horas').value = Math.round((en-st)/3600000*100)/100;
+    }
+    updatePreview();
+    return;
+  }
   const b = splitShiftHours(data, inicio, fim, feriado);
   if(!b){ updatePreview(); return; }
   document.getElementById('f_semDia').value = b.semDia;
@@ -1095,13 +1135,13 @@ function updatePreview(){
   const data = document.getElementById('f_data').value;
   const ano = yearOf(data);
   const h = readFormHours();
-  const totalHoras = (h.semDia||0) + (h.semNoite||0) + (h.fdsDia||0) + (h.fdsNoite||0);
+  const totalHoras = isSimple(formType) ? (h.horas||0) : (h.semDia||0) + (h.semNoite||0) + (h.fdsDia||0) + (h.fdsNoite||0);
   const totalHorasEl = document.getElementById('totalHorasDisplay');
   if(totalHorasEl) totalHorasEl.textContent = totalHoras>0 ? `${(Math.round(totalHoras*100)/100)}h feitas` : '';
   const c = computeCalc(formType, ano, h, formGrau);
   const box = document.getElementById('calcPreview');
-  if(!c){
-    box.innerHTML = `<div class="row">Sem tarifa definida para ${ano} (categoria ${formType==='reforco'?'Reforço':'Prevenção'}${formType==='prevencao'?(' · '+(formGrau==='chefe'?'Chefe':'Praça')):''}). Defina em "Tarifas".</div>`;
+  if(!c || (isSimple(formType) && !(c.rateUsed && simpleRate(c.rateUsed, formSub)>0))){
+    box.innerHTML = `<div class="row">Sem tarifa definida para ${ano} (categoria ${catLabel(formType)}${formType==='prevencao'?(' · '+(formGrau==='chefe'?'Chefe':'Praça')):''}). Defina em "Tarifas".</div>`;
     return;
   }
   box.innerHTML = `
@@ -1115,11 +1155,14 @@ function updatePreview(){
 function saveRecord(){
   const data = document.getElementById('f_data').value;
   if(!data){ toast('Indique a data'); return; }
-  const tipo = document.getElementById('f_tipo').value.trim() || (formType==='reforco'?'Reforço':'Prevenção');
+  const tipo = document.getElementById('f_tipo').value.trim() || (isSimple(formType) && formSub==='prolongamento' ? 'Prolongamento' : catLabel(formType));
   const ano = yearOf(data);
   const h = readFormHours();
   const c = computeCalc(formType, ano, h, formGrau);
   const editId = document.getElementById('editId').value;
+  const simple = isSimple(formType);
+  if(simple && !(c && c.rateUsed && simpleRate(c.rateUsed, formSub)>0)){ toast('Defina primeiro o valor à hora em Tarifas'); return; }
+  if(simple && !(h.horas>0)){ toast('Indique as horas (início e fim)'); return; }
 
   const rec = {
     id: editId || ('u'+Date.now()),
@@ -1127,8 +1170,10 @@ function saveRecord(){
     tipo, data, ano,
     inicio: document.getElementById('f_inicio').value,
     fim: document.getElementById('f_fim').value,
-    semDia: h.semDia, semNoite: h.semNoite, fdsDia: h.fdsDia, fdsNoite: h.fdsNoite,
-    palm: h.palm,
+    semDia: simple?0:h.semDia, semNoite: simple?0:h.semNoite, fdsDia: simple?0:h.fdsDia, fdsNoite: simple?0:h.fdsNoite,
+    horas: simple ? h.horas : 0,
+    sub: simple ? formSub : undefined,
+    palm: simple?0:h.palm,
     refeicao: formType==='reforco' ? h.refeicao : 0,
     almjant: formType==='prevencao' ? h.almjant : 0,
     grau: formType==='prevencao' ? formGrau : undefined,
@@ -1173,10 +1218,26 @@ function onRateCategoriaChange(){
 
 function renderRateTable(){
   const cat = document.getElementById('rateCategoria').value;
+  const simple = isSimple(cat);
   const isPrev = cat==='prevencao';
   const grau = document.getElementById('rateGrau').value;
+  if(simple && (!state.rates[cat] || !Object.keys(state.rates[cat]).length)){
+    state.rates[cat] = {}; state.rates[cat][new Date().getFullYear()] = {hora:0, horaProl:0, fator:1.08};
+  }
   const rateSet = state.rates[cat] || {};
   const years = Object.keys(rateSet).sort((a,b)=>a-b);
+  if(simple){
+    let h = `<tr><th>Ano</th><th>Aeroporto €/h</th><th>Prolong. €/h</th><th>Fator</th></tr>`;
+    years.forEach(y=>{
+      const e = rateSet[y];
+      h += `<tr><td>${y}</td>
+        <td><input type="number" step="0.01" value="${e.hora||0}" data-y="${y}" data-f="hora"></td>
+        <td><input type="number" step="0.01" value="${e.horaProl||0}" data-y="${y}" data-f="horaProl"></td>
+        <td><input type="number" step="0.01" value="${e.fator||1.08}" data-y="${y}" data-f="fator"></td></tr>`;
+    });
+    document.getElementById('rateTable').innerHTML = h;
+    return;
+  }
   const mealLabel = cat==='reforco' ? 'Refeição' : 'Alm/Jant';
   let html = `<tr><th>Ano</th><th>Sem. dia</th><th>Sem. noite</th><th>Fds dia</th><th>Fds noite</th><th>P.Alm</th><th>${mealLabel}</th><th>Fator</th></tr>`;
   years.forEach(y=>{
@@ -1214,7 +1275,7 @@ function addRateYear(){
       chefe:{semDia:0,semNoite:0,fdsDia:0,fdsNoite:0,palm:0,almjant:0}, fator:1.08};
     state.rates[cat][yr] = JSON.parse(JSON.stringify(base));
   } else {
-    const base = nearest ? state.rates[cat][nearest] : {semDia:0,semNoite:0,fdsDia:0,fdsNoite:0,palm:0,refeicao:0,fator:1.08};
+    const base = nearest ? state.rates[cat][nearest] : (isSimple(cat) ? {hora:0,horaProl:0,fator:1.08} : {semDia:0,semNoite:0,fdsDia:0,fdsNoite:0,palm:0,refeicao:0,fator:1.08});
     state.rates[cat][yr] = Object.assign({}, base);
   }
   saveState();
@@ -1290,33 +1351,33 @@ function printCurrentView(){
   if(view==='dashboard'){
     const sel = document.getElementById('dashYear').value;
     title = 'Resumo — ' + (sel==='all' ? 'Todos os anos' : sel);
-    meta = `Reforços: ${document.getElementById('kpiReforco').textContent} · Prevenções: ${document.getElementById('kpiPrevencao').textContent} · Total: ${document.getElementById('kpiTotal').textContent}`;
+    meta = `Reforços: ${document.getElementById('kpiReforco').textContent} · Prevenções: ${document.getElementById('kpiPrevencao').textContent} · Aeroporto: ${document.getElementById('kpiAeroporto').textContent} · Total: ${document.getElementById('kpiTotal').textContent}`;
   } else if(view==='historico'){
     const ano = document.getElementById('filtAno').value;
     const cat = document.getElementById('filtCategoria').value;
-    const catLabel = cat==='reforco' ? 'Reforços' : cat==='prevencao' ? 'Prevenções' : 'Todas as categorias';
+    const catLbl = catPlural(cat);
     title = 'Histórico — ' + (ano || 'Todos os anos');
-    meta = catLabel + ' · ' + document.querySelectorAll('#histList .hist-item').length + ' registo(s)';
+    meta = catLbl + ' · ' + document.querySelectorAll('#histList .hist-item').length + ' registo(s)';
   } else if(view==='pesquisa'){
     const ano = document.getElementById('pesqAno').value;
     const mesSel = document.getElementById('pesqMes');
     const mes = mesSel.options[mesSel.selectedIndex].textContent;
     const cat = document.getElementById('pesqCategoria').value;
-    const catLabel = cat==='reforco' ? 'Reforços' : cat==='prevencao' ? 'Prevenções' : 'Todas as categorias';
+    const catLbl = catPlural(cat);
     const tipoSel = document.getElementById('pesqTipo');
     const tipo = tipoSel.options[tipoSel.selectedIndex].textContent;
     title = 'Pesquisa';
-    meta = `${ano||'Todos os anos'} · ${mes} · ${catLabel} · ${tipo}<br>`+
+    meta = `${ano||'Todos os anos'} · ${mes} · ${catLbl} · ${tipo}<br>`+
            `Horas feitas: ${document.getElementById('pesqHoras').textContent} · `+
            `Nº registos: ${document.getElementById('pesqCount').textContent} · `+
            `Total a pagar: ${document.getElementById('pesqTotal').textContent}`;
   } else if(view==='tarifas'){
     const cat = document.getElementById('rateCategoria').value;
-    const catLabel = cat==='reforco' ? 'Reforço' : 'Prevenção / Descarga';
+    const catLbl = cat==='prevencao' ? 'Prevenção / Descarga' : catLabel(cat);
     const grauSel = document.getElementById('rateGrau');
     const grauLabel = (cat==='prevencao') ? (' · ' + grauSel.options[grauSel.selectedIndex].textContent) : '';
     title = 'Tabela de tarifas';
-    meta = catLabel + grauLabel;
+    meta = catLbl + grauLabel;
   } else {
     title = 'Prevenções & Reforços';
   }
@@ -1326,20 +1387,264 @@ function printCurrentView(){
   window.print();
 }
 
+/* ============ CONTA + SINCRONIZAÇÃO (Firebase) ============ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAWNDft071PBQ3LcVMJrDoz4D3lSukVR_0",
+  authDomain: "preven-refor.firebaseapp.com",
+  projectId: "preven-refor",
+  storageBucket: "preven-refor.firebasestorage.app",
+  messagingSenderId: "1019176179417",
+  appId: "1:1019176179417:web:6605cfdb45274f44e610c8"
+};
+let auth = null, db = null, docRef = null, unsubDoc = null;
+let remoteReady = false, loadTimer = null;
+
+const AUTH_ERR = {
+  'auth/invalid-email':'Email inválido.',
+  'auth/missing-email':'Indique o email.',
+  'auth/missing-password':'Indique a palavra-passe.',
+  'auth/user-disabled':'Esta conta foi desativada.',
+  'auth/user-not-found':'Email ou palavra-passe incorretos.',
+  'auth/wrong-password':'Email ou palavra-passe incorretos.',
+  'auth/invalid-credential':'Email ou palavra-passe incorretos.',
+  'auth/invalid-login-credentials':'Email ou palavra-passe incorretos.',
+  'auth/email-already-in-use':'Já existe uma conta com este email. Use "Entrar".',
+  'auth/weak-password':'A palavra-passe deve ter pelo menos 6 caracteres.',
+  'auth/too-many-requests':'Demasiadas tentativas. Aguarde uns minutos e tente de novo.',
+  'auth/network-request-failed':'Sem ligação à internet.',
+  'auth/operation-not-allowed':'O início de sessão por email/palavra-passe não está ativo no Firebase (Authentication → Sign-in method).'
+};
+function authErrorPt(e){ return AUTH_ERR[e && e.code] || ('Erro: ' + ((e && (e.message||e.code)) || 'desconhecido')); }
+function setAuthMsg(msg, ok){
+  const el = document.getElementById('authMsg');
+  el.textContent = msg || '';
+  el.className = 'auth-msg' + (ok ? ' ok' : '');
+}
+function setBodyState(s){
+  document.body.classList.remove('state-loading','state-guest','state-app');
+  document.body.classList.add('state-' + s);
+}
+function setSyncStatus(msg, ok){
+  const box = document.getElementById('syncStatusBox');
+  if(!box) return;
+  box.textContent = msg;
+  box.style.color = ok ? 'var(--green)' : 'var(--muted)';
+}
+function readCreds(){
+  return { email: document.getElementById('authEmail').value.trim(),
+           pass: document.getElementById('authPass').value };
+}
+function doLogin(){
+  const {email, pass} = readCreds();
+  if(!email || !pass){ setAuthMsg('Indique o email e a palavra-passe.'); return; }
+  setAuthMsg('A entrar…', true);
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(()=>{ document.getElementById('authPass').value=''; setAuthMsg(''); })
+    .catch(e=> setAuthMsg(authErrorPt(e)));
+}
+function doRegister(){
+  const {email, pass} = readCreds();
+  if(!email || !pass){ setAuthMsg('Indique o email e escolha uma palavra-passe (mínimo 6 caracteres).'); return; }
+  setAuthMsg('A criar conta…', true);
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(()=>{ document.getElementById('authPass').value=''; setAuthMsg(''); })
+    .catch(e=> setAuthMsg(authErrorPt(e)));
+}
+function doReset(){
+  const {email} = readCreds();
+  if(!email){ setAuthMsg('Escreva o seu email e toque novamente em "Esqueci a palavra-passe".'); return; }
+  auth.sendPasswordResetEmail(email)
+    .then(()=> setAuthMsg('Se existir uma conta com este email, enviámos um link para repor a palavra-passe.', true))
+    .catch(e=> setAuthMsg(authErrorPt(e)));
+}
+function doLogout(force){
+  if(!force){
+    const unsynced = currentUser && localStorage.getItem(DIRTY_PREFIX + currentUser.uid) === '1';
+    const msg = unsynced
+      ? 'Há alterações que ainda não foram sincronizadas e serão perdidas se terminar a sessão agora. Continuar?'
+      : 'Terminar sessão neste equipamento?';
+    if(!confirm(msg)) return;
+  }
+  const k = cacheKey();
+  const uid = currentUser && currentUser.uid;
+  stopSync();
+  if(k) localStorage.removeItem(k);            // não deixar dados no equipamento
+  if(uid) localStorage.removeItem(DIRTY_PREFIX + uid);
+  auth.signOut();
+}
+
+function markDirty(v){
+  if(!currentUser) return;
+  const k = DIRTY_PREFIX + currentUser.uid;
+  if(v) localStorage.setItem(k, '1'); else localStorage.removeItem(k);
+}
+function isDirty(){ return !!currentUser && localStorage.getItem(DIRTY_PREFIX + currentUser.uid) === '1'; }
+
+function refreshAll(){
+  renderDashboard(); renderHistorico(); renderPesquisa(); renderRateTable();
+  updateLegacyBox();
+}
+
+function startSession(user){
+  if(currentUser && currentUser.uid === user.uid) return;
+  currentUser = user;
+  const cached = loadCache();
+  state = cached || defaultState();
+  remoteReady = false;
+  document.getElementById('accountEmail').textContent = user.email || '';
+  ['dashYear','filtAno','pesqAno','pesqMes','pesqCategoria','pesqTipo','filtCategoria'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  showView('dashboard');
+  setBodyState('app');
+  refreshAll();
+
+  // Bloqueia a edição até sabermos o que existe no servidor (evita sobrescrever dados)
+  document.body.classList.add('loading-data');
+  document.getElementById('dataLoadingText').textContent = 'A carregar os seus dados…';
+  document.getElementById('dataLoadingBtns').style.display = 'none';
+  clearTimeout(loadTimer);
+  loadTimer = setTimeout(()=>{
+    if(remoteReady) return;
+    if(cached){
+      document.body.classList.remove('loading-data');
+      toast('Sem ligação — a usar os dados guardados neste equipamento');
+      setSyncStatus('Sem ligação ao servidor. As alterações serão enviadas quando houver internet.', false);
+    } else {
+      document.getElementById('dataLoadingText').textContent = 'Não foi possível carregar os seus dados. Verifique a ligação à internet.';
+      document.getElementById('dataLoadingBtns').style.display = 'block';
+    }
+  }, 8000);
+  startSync(user);
+}
+function endSession(){
+  stopSync();
+  currentUser = null;
+  state = defaultState();
+  remoteReady = false;
+  clearTimeout(loadTimer);
+  document.body.classList.remove('loading-data');
+  closeForm(); closeDetail();
+  setBodyState('guest');
+}
+
+function startSync(user){
+  docRef = db.collection('users').doc(user.uid);
+  unsubDoc = docRef.onSnapshot(snap=>{
+    if(!currentUser || currentUser.uid !== user.uid) return;
+    if(snap.metadata && snap.metadata.hasPendingWrites) return;      // eco de uma gravação local
+    if(snap.exists){
+      const payload = (snap.data() || {}).payload;
+      if(payload && payload === JSON.stringify(state)){
+        markDirty(false);
+      } else if(isDirty()){
+        remoteReady = true; pushSync();                              // há alterações locais por enviar: prevalecem
+      } else if(payload){
+        try{
+          const s = JSON.parse(payload);
+          if(s && Array.isArray(s.records) && s.rates){
+            state = s;
+            localStorage.setItem(cacheKey(), payload);
+            refreshAll();
+          }
+        }catch(e){}
+      }
+      remoteReady = true;
+      setSyncStatus('Sincronizado · ' + new Date().toLocaleTimeString('pt-PT'), true);
+    } else if(!(snap.metadata && snap.metadata.fromCache)){
+      remoteReady = true;                                            // servidor confirma: conta ainda sem dados
+      pushSync();
+      setSyncStatus('Conta criada · a guardar…', false);
+    } else {
+      return;                                                        // sem confirmação do servidor: esperar
+    }
+    clearTimeout(loadTimer);
+    document.body.classList.remove('loading-data');
+  }, err=>{
+    setSyncStatus('Erro de sincronização: ' + err.message, false);
+    if(err && err.code === 'permission-denied'){
+      document.getElementById('dataLoadingText').textContent = 'Sem permissão para aceder aos dados. As regras do Firestore precisam de ser atualizadas (ver instruções).';
+      document.getElementById('dataLoadingBtns').style.display = 'block';
+    }
+  });
+}
+function stopSync(){
+  if(unsubDoc){ unsubDoc(); unsubDoc = null; }
+  docRef = null;
+}
+function pushSync(){
+  if(!docRef || !currentUser) return;
+  markDirty(true);
+  if(!remoteReady) return;
+  const uid = currentUser.uid;
+  docRef.set({ payload: JSON.stringify(state), updatedAt: new Date().toISOString() })
+    .then(()=>{
+      if(!currentUser || currentUser.uid !== uid) return;
+      markDirty(false);
+      setSyncStatus('Sincronizado · ' + new Date().toLocaleTimeString('pt-PT'), true);
+    })
+    .catch(err=> setSyncStatus('Erro ao gravar: ' + err.message, false));
+}
+
+/* Dados da versão anterior (guardados neste equipamento antes de existirem contas) */
+function legacyData(){
+  try{
+    const s = JSON.parse(localStorage.getItem(LEGACY_KEY) || 'null');
+    return (s && Array.isArray(s.records) && s.records.length) ? s : null;
+  }catch(e){ return null; }
+}
+function updateLegacyBox(){
+  const box = document.getElementById('legacyBox');
+  if(!box) return;
+  const s = currentUser ? legacyData() : null;
+  box.style.display = s ? 'block' : 'none';
+  if(s) document.getElementById('legacyText').textContent =
+    `Este equipamento tem ${s.records.length} registo(s) guardados pela versão anterior da app (sem conta). Importe-os só se forem seus.`;
+}
+function importLegacy(){
+  const s = legacyData();
+  if(!s || !currentUser) return;
+  if(!confirm(`Importar ${s.records.length} registo(s) para a conta ${currentUser.email}?`)) return;
+  const have = new Set(state.records.map(r=>r.id));
+  let added = 0;
+  s.records.forEach(r=>{ if(!have.has(r.id)){ state.records.push(r); added++; } });
+  if(s.rates){
+    Object.keys(s.rates).forEach(cat=>{
+      state.rates[cat] = state.rates[cat] || {};
+      Object.keys(s.rates[cat]).forEach(y=>{ if(!state.rates[cat][y]) state.rates[cat][y] = s.rates[cat][y]; });
+    });
+  }
+  localStorage.removeItem(LEGACY_KEY);
+  saveState();
+  refreshAll();
+  toast(added + ' registo(s) importado(s)');
+}
+
+function initAuth(){
+  document.getElementById('authLogo').src = document.querySelector('.flame').src;
+  if(typeof firebase === 'undefined'){
+    setBodyState('guest');
+    document.getElementById('authForm').style.display = 'none';
+    document.getElementById('authFootMsg').textContent = 'Não foi possível carregar o Firebase. Verifique a ligação à internet e recarregue a página.';
+    return;
+  }
+  try{
+    if(!firebase.apps || firebase.apps.length === 0) firebase.initializeApp(FIREBASE_CONFIG);
+    auth = firebase.auth();
+    db = firebase.firestore();
+  }catch(e){
+    setBodyState('guest');
+    document.getElementById('authFootMsg').textContent = 'Erro ao iniciar o Firebase: ' + e.message;
+    return;
+  }
+  auth.onAuthStateChanged(user=>{ if(user) startSession(user); else endSession(); });
+}
+
 /* ============ INIT ============ */
-renderDashboard();
 onRateCategoriaChange();
 switchFormType('reforco');
-
-(function initSync(){
-  const saved = loadSyncConfig();
-  if(saved){
-    document.getElementById('syncCode').value = saved.code || '';
-    connectSync(true);
-  } else {
-    setSyncStatus('Sincronização desligada — os dados ficam só neste equipamento.', false);
-  }
-})();
+localStorage.removeItem('pr_sync_cfg');   // configuração antiga (já não é necessária)
+initAuth();
 </script>
 </body>
 </html>
