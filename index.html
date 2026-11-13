@@ -19,6 +19,7 @@
     --teal:#3d9186;
     --sky:#5b8fd9;
     --violet:#a07cd6;
+    --rose:#d9708a;
     --green:#4a9d6e;
     --font: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --mono: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
@@ -86,6 +87,7 @@
   .kpi.prevencao .val{color:var(--amber);}
   .kpi.aeroporto .val{color:var(--sky);}
   .kpi.prolongamento .val{color:var(--violet);}
+  .kpi.formacao .val{color:var(--rose);}
   .kpi.geral .val{color:var(--ink);}
 
   .year-select{
@@ -107,6 +109,7 @@
   .bar-seg.prevencao{background:var(--amber);}
   .bar-seg.aeroporto{background:var(--sky);}
   .bar-seg.prolongamento{background:var(--violet);}
+  .bar-seg.formacao{background:var(--rose);}
   .bar-amt{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);}
 
   .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-top:8px;}
@@ -116,6 +119,7 @@
   .dot.prevencao{background:var(--amber);}
   .dot.aeroporto{background:var(--sky);}
   .dot.prolongamento{background:var(--violet);}
+  .dot.formacao{background:var(--rose);}
 
   /* Forms */
   .seg-toggle{display:flex;flex-wrap:wrap;gap:3px;background:var(--panel-2);border-radius:10px;padding:3px;margin-bottom:16px;border:1px solid var(--line);}
@@ -124,6 +128,7 @@
   .seg-btn.active.prevencao{background:var(--amber);color:#2b1c05;}
   .seg-btn.active.aeroporto{background:var(--sky);color:#081a33;}
   .seg-btn.active.prolongamento{background:var(--violet);color:#1d1033;}
+  .seg-btn.active.formacao{background:var(--rose);color:#33091a;}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .grid4{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -153,6 +158,7 @@
   .btn-primary.reforco{background:var(--teal);color:#08201d;}
   .btn-primary.aeroporto{background:var(--sky);color:#081a33;}
   .btn-primary.prolongamento{background:var(--violet);color:#1d1033;}
+  .btn-primary.formacao{background:var(--rose);color:#33091a;}
   .btn-secondary{background:var(--panel-2);color:var(--ink);border:1px solid var(--line);}
   .btn-danger{background:transparent;color:var(--red);border:1px solid var(--red-deep);}
   .btn-sm{width:auto;padding:7px 12px;font-size:12px;margin-top:0;display:inline-block;}
@@ -175,6 +181,7 @@
   .tag-cat.prevencao{background:rgba(217,154,61,.18);color:var(--amber);}
   .tag-cat.aeroporto{background:rgba(91,143,217,.18);color:var(--sky);}
   .tag-cat.prolongamento{background:rgba(160,124,214,.18);color:var(--violet);}
+  .tag-cat.formacao{background:rgba(217,112,138,.18);color:var(--rose);}
   .empty-msg{text-align:center;color:var(--muted);padding:30px 10px;font-size:13px;}
 
   /* Tarifas */
@@ -256,6 +263,7 @@
     .kpi.prevencao .val{color:#a9710f;}
     .kpi.aeroporto .val{color:#2c5fa8;}
     .kpi.prolongamento .val{color:#6b45a8;}
+    .kpi.formacao .val{color:#b0365a;}
     .kpi.geral .val{color:#000;}
     .bar-track{background:#eee;border:1px solid #ccc;}
     .bar-amt{color:#000;}
@@ -265,6 +273,7 @@
     .tag-cat.prevencao{background:#f6ead3;color:#a9710f;}
     .tag-cat.aeroporto{background:#e1ebf8;color:#2c5fa8;}
     .tag-cat.prolongamento{background:#ece4f6;color:#6b45a8;}
+    .tag-cat.formacao{background:#f8e3ea;color:#b0365a;}
     .print-header{
       display:block;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #000;
     }
@@ -306,8 +315,9 @@
       <div class="kpi prevencao"><div class="lbl">Prevenções</div><div class="val" id="kpiPrevencao">€0</div></div>
       <div class="kpi geral"><div class="lbl">Total ano</div><div class="val" id="kpiTotal">€0</div></div>
     </div>
-    <div class="kpi-row" style="grid-template-columns:1fr;">
-      <div class="kpi aeroporto"><div class="lbl">Aeroporto (inclui prolongamento)</div><div class="val" id="kpiAeroporto">€0</div></div>
+    <div class="kpi-row" style="grid-template-columns:repeat(2,1fr);">
+      <div class="kpi aeroporto"><div class="lbl">Aeroporto (c/ prolongamento)</div><div class="val" id="kpiAeroporto">€0</div></div>
+      <div class="kpi formacao"><div class="lbl">Formações</div><div class="val" id="kpiFormacao">€0</div></div>
     </div>
 
     <div class="card">
@@ -317,6 +327,7 @@
         <span><i class="dot reforco"></i>Reforços</span>
         <span><i class="dot prevencao"></i>Prevenções</span>
         <span><i class="dot aeroporto"></i>Aeroporto</span>
+        <span><i class="dot formacao"></i>Formações</span>
       </div>
     </div>
 
@@ -327,6 +338,7 @@
         <span><i class="dot reforco"></i>Reforços</span>
         <span><i class="dot prevencao"></i>Prevenções</span>
         <span><i class="dot aeroporto"></i>Aeroporto</span>
+        <span><i class="dot formacao"></i>Formações</span>
       </div>
     </div>
 
@@ -340,6 +352,7 @@
       <button class="btn btn-primary reforco" onclick="openForm('reforco')">+ Novo Reforço</button>
       <button class="btn btn-primary" onclick="openForm('prevencao')">+ Nova Prevenção / Descarga</button>
     <button class="btn btn-primary aeroporto" onclick="openForm('aeroporto')">+ Novo Aeroporto</button>
+    <button class="btn btn-primary formacao" onclick="openForm('formacao')">+ Nova Formação</button>
     </div>
   </div>
 
@@ -353,6 +366,7 @@
         <option value="reforco">Reforços</option>
         <option value="prevencao">Prevenções</option>
         <option value="aeroporto">Aeroporto</option>
+        <option value="formacao">Formações</option>
       </select>
     </div>
     <div id="histList"></div>
@@ -377,6 +391,7 @@
         <option value="reforco">Reforços</option>
         <option value="prevencao">Prevenções</option>
         <option value="aeroporto">Aeroporto</option>
+        <option value="formacao">Formações</option>
       </select>
       <select id="pesqTipo" onchange="renderPesquisa()"><option value="">Todos os tipos</option></select>
     </div>
@@ -396,7 +411,8 @@
     <button class="btn btn-primary reforco" onclick="openForm('reforco')">+ Novo Reforço</button>
     <button class="btn btn-primary" onclick="openForm('prevencao')">+ Nova Prevenção / Descarga</button>
     <button class="btn btn-primary aeroporto" onclick="openForm('aeroporto')">+ Novo Aeroporto</button>
-    <p class="hint" style="margin-top:16px;">Reforço: turnos com tarifa fixa por hora (ex. Reforço TNU, apoio a eventos).<br>Prevenção/Descarga: serviços com início-fim e equipa (piscinas, eventos desportivos, evacuações, etc.).<br>Aeroporto (com ou sem prolongamento): serviços pagos com um valor fixo por hora.</p>
+    <button class="btn btn-primary formacao" onclick="openForm('formacao')">+ Nova Formação</button>
+    <p class="hint" style="margin-top:16px;">Reforço: turnos com tarifa fixa por hora (ex. Reforço TNU, apoio a eventos).<br>Prevenção/Descarga: serviços com início-fim e equipa (piscinas, eventos desportivos, evacuações, etc.).<br>Aeroporto (com ou sem prolongamento): serviços pagos com um valor fixo por hora.<br>Formação: formação dada a uma entidade, com nº de horas e valor à hora.</p>
   </div>
 
   <!-- TARIFAS -->
@@ -482,6 +498,7 @@
       <button class="seg-btn reforco" id="segReforco" onclick="switchFormType('reforco')">Reforço</button>
       <button class="seg-btn prevencao" id="segPrevencao" onclick="switchFormType('prevencao')">Prevenção / Descarga</button>
       <button class="seg-btn aeroporto" id="segAeroporto" onclick="switchFormType('aeroporto')">Aeroporto</button>
+      <button class="seg-btn formacao" id="segFormacao" onclick="switchFormType('formacao')">Formação</button>
     </div>
 
     <input type="hidden" id="editId">
@@ -494,7 +511,7 @@
       </div>
     </div>
 
-    <label>Tipo de serviço</label>
+    <label id="lbl_tipo">Tipo de serviço</label>
     <input type="text" id="f_tipo" placeholder="ex. Reforço TNU, Prev. Líquidos, Prev. Desportiva...">
 
     <div class="grid2">
@@ -511,13 +528,20 @@
       </div>
     </div>
 
+    <div id="wrap_formacao" style="display:none;">
+      <label>Entidade (a quem foi dada)</label>
+      <input type="text" id="f_entidade" placeholder="ex. Escola, Empresa, Associação...">
+      <label>Valor à hora (€)</label>
+      <input type="number" step="0.01" min="0" id="f_valorHora" value="0" oninput="updatePreview()">
+    </div>
+
     <div id="wrap_horas" style="display:none;margin-top:14px;">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <label style="margin:0;">Horas feitas</label>
         <span id="horasSimplesDisplay" style="font-size:12px;color:var(--muted);"></span>
       </div>
       <input type="number" step="0.25" min="0" id="f_horas" value="0" oninput="updatePreview()">
-      <p class="hint" style="margin-top:4px;">Calculado automaticamente a partir do início/fim (pode ajustar). O valor à hora (Aeroporto ou Prolongamento) é o definido em "Tarifas".</p>
+      <p class="hint" id="hintHorasSimples" style="margin-top:4px;">Calculado automaticamente a partir do início/fim (pode ajustar). O valor à hora (Aeroporto ou Prolongamento) é o definido em "Tarifas".</p>
     </div>
 
     <div id="wrap_blocos">
@@ -681,9 +705,10 @@ function ratesFor(categoria, ano, grau){
 const CATS = {
   reforco:{label:'Reforço', plural:'Reforços'},
   prevencao:{label:'Prevenção', plural:'Prevenções'},
-  aeroporto:{label:'Aeroporto', plural:'Aeroporto'}
+  aeroporto:{label:'Aeroporto', plural:'Aeroporto'},
+  formacao:{label:'Formação', plural:'Formações'}
 };
-const CAT_KEYS = ['reforco','prevencao','aeroporto'];
+const CAT_KEYS = ['reforco','prevencao','aeroporto','formacao'];
 function isSimple(c){ return c==='aeroporto'; }   // valor à hora (Aeroporto ou Prolongamento)
 function simpleRate(rt, sub){ return rt ? ((sub==='prolongamento' ? rt.horaProl : rt.hora)||0) : 0; }
 let formSub = 'normal';
@@ -692,7 +717,7 @@ function catPlural(c){ return c ? (CATS[c]||CATS.prevencao).plural : 'Todas as c
 function hoursOf(r){ return (r.semDia||0)+(r.semNoite||0)+(r.fdsDia||0)+(r.fdsNoite||0)+(r.horas||0); }
 function pagarOf(r){ const c = calcForRecord(r); return c ? c.totalPagar : (r.total||0)/1.08; }
 function sumByCat(recs){
-  const t = {reforco:0, prevencao:0, aeroporto:0, tot:0};
+  const t = {reforco:0, prevencao:0, aeroporto:0, formacao:0, tot:0};
   recs.forEach(r=>{ const p = pagarOf(r); const k = r.categoria==='prolongamento' ? 'aeroporto' : ((r.categoria in t) ? r.categoria : 'prevencao'); t[k]+=p; t.tot+=p; });
   return t;
 }
@@ -711,6 +736,10 @@ function calcForRecord(r){
   return computeCalc(r.categoria, r.ano, r, r.grau||'pracas');
 }
 function computeCalc(categoria, ano, h, grau){
+  if(categoria==='formacao'){   // valor à hora indicado em cada registo, sem desconto
+    const total = (h.horas||0) * (h.valorHora||0);
+    return {total, desconto:0, totalPagar:total, fator:1};
+  }
   const r = ratesFor(categoria, ano, grau);
   if(!r) return null;
   if(isSimple(categoria)){
@@ -773,6 +802,7 @@ function renderDashboard(){
   document.getElementById('kpiReforco').textContent = euro(T.reforco);
   document.getElementById('kpiPrevencao').textContent = euro(T.prevencao);
   document.getElementById('kpiAeroporto').textContent = euro(T.aeroporto);
+  document.getElementById('kpiFormacao').textContent = euro(T.formacao);
   document.getElementById('kpiTotal').textContent = euro(T.tot);
 
   // bars per year
@@ -821,7 +851,7 @@ function horasBreakdown(r){
 function histItemHtml(r){
   const c = calcForRecord(r);
   const pagar = c ? c.totalPagar : r.total/1.08;
-  const equipaLine = (r.equipa && r.equipa.length) ? r.equipa.join(', ') : '';
+  const equipaLine = r.categoria==='formacao' ? [r.entidade, (r.valorHora!=null ? euro(r.valorHora)+'/h' : '')].filter(Boolean).join(' · ') : ((r.equipa && r.equipa.length) ? r.equipa.join(', ') : '');
   const grauLabel = r.categoria==='prevencao' ? (r.grau==='chefe'?'Chefe':'Praça') : (r.sub==='prolongamento' ? 'Prolongamento' : '');
   const horas = hoursOf(r);
   const horasTxt = `${Math.round(horas*100)/100}h`;
@@ -932,6 +962,7 @@ function openDetail(id){
   let html = '';
   html += row('Tipo', r.tipo);
   html += row('Categoria', r.categoria==='prevencao' ? 'Prevenção / Descarga' : catLabel(r.categoria));
+  if(r.categoria==='formacao' && r.entidade) html += row('Entidade', escapeHtml(r.entidade));
   if(isSimple(r.categoria)) html += row('Serviço', r.sub==='prolongamento' ? 'Prolongamento' : 'Aeroporto');
   if(r.categoria==='prevencao') html += row('Grau', r.grau==='chefe'?'Chefe':'Praça');
   html += row('Data', formatDatePT(r.data));
@@ -939,7 +970,9 @@ function openDetail(id){
   if(r.fim) html += row('Fim', r.fim);
   const totalHoras = hoursOf(r);
   html += row('Horas feitas', `${Math.round(totalHoras*100)/100}h`);
-  if(isSimple(r.categoria)){
+  if(r.categoria==='formacao'){
+    html += row('Valor à hora', euro(r.valorHora||0));
+  } else if(isSimple(r.categoria)){
     const rt = ratesFor(r.categoria, r.ano);
     if(rt) html += row('Valor à hora', euro(simpleRate(rt, r.sub)));
   } else {
@@ -949,8 +982,10 @@ function openDetail(id){
     html += row(mealField, mealVal);
   }
   if(r.equipa && r.equipa.length) html += row('Equipa', r.equipa.join(', '));
-  html += row('Total bruto', euro(c.total));
-  html += row('Desconto', euro(c.desconto));
+  if(r.categoria!=='formacao'){
+    html += row('Total bruto', euro(c.total));
+    html += row('Desconto', euro(c.desconto));
+  }
   html += row('Total a pagar', euro(c.totalPagar));
   document.getElementById('detailBody').innerHTML = html;
   document.getElementById('detailEditBtn').onclick = ()=>{ closeDetail(); openForm(r.categoria, id); };
@@ -1000,6 +1035,8 @@ function openForm(type, editId){
     document.getElementById('f_fdsNoite').value = r.fdsNoite||0;
     document.getElementById('f_palm').value = r.palm||0;
     document.getElementById('f_horas').value = r.horas||0;
+    document.getElementById('f_entidade').value = r.entidade||'';
+    document.getElementById('f_valorHora').value = r.valorHora||0;
     equipaList = (r.equipa||[]).slice();
     formType = r.categoria;
     formGrau = r.grau || 'pracas';
@@ -1016,6 +1053,8 @@ function openForm(type, editId){
     document.getElementById('f_fdsNoite').value = 0;
     document.getElementById('f_palm').value = 0;
     document.getElementById('f_horas').value = 0;
+    document.getElementById('f_entidade').value = '';
+    document.getElementById('f_valorHora').value = 0;
   }
   switchFormType(formType, editId);
   setGrau(formGrau);
@@ -1035,11 +1074,15 @@ function switchFormType(type){
   });
   const isPrev = type==='prevencao';
   const simple = isSimple(type);
-  document.getElementById('wrap_inicio').style.display = 'block';
-  document.getElementById('wrap_fim_row').style.display = 'grid';
+  const form = type==='formacao';
+  document.getElementById('wrap_inicio').style.display = form ? 'none' : 'block';
+  document.getElementById('wrap_fim_row').style.display = form ? 'none' : 'grid';
+  document.getElementById('wrap_formacao').style.display = form ? 'block' : 'none';
+  document.getElementById('hintHorasSimples').style.display = form ? 'none' : 'block';
+  document.getElementById('lbl_tipo').textContent = form ? 'Nome da formação' : 'Tipo de serviço';
   document.getElementById('wrap_feriado').style.display = simple ? 'none' : 'flex';
-  document.getElementById('wrap_blocos').style.display = simple ? 'none' : 'block';
-  document.getElementById('wrap_horas').style.display = simple ? 'block' : 'none';
+  document.getElementById('wrap_blocos').style.display = (simple||form) ? 'none' : 'block';
+  document.getElementById('wrap_horas').style.display = (simple||form) ? 'block' : 'none';
   document.getElementById('wrap_subtipo').style.display = simple ? 'block' : 'none';
   document.getElementById('wrap_equipa').style.display = isPrev ? 'block' : 'none';
   document.getElementById('wrap_grau').style.display = isPrev ? 'block' : 'none';
@@ -1072,6 +1115,7 @@ function readFormHours(){
     almjant: parseFloat(document.getElementById('f_refeicao').value)||0,
     horas: parseFloat(document.getElementById('f_horas').value)||0,
     sub: formSub,
+    valorHora: parseFloat(document.getElementById('f_valorHora').value)||0,
   };
 }
 
@@ -1112,6 +1156,7 @@ function autoCalcHours(){
   const inicio = document.getElementById('f_inicio').value;
   const fim = document.getElementById('f_fim').value;
   const feriado = document.getElementById('f_feriado').checked;
+  if(formType==='formacao'){ updatePreview(); return; }
   if(isSimple(formType)){
     if(data && inicio && fim){
       const st = new Date(data+'T'+inicio+':00');
@@ -1135,13 +1180,19 @@ function updatePreview(){
   const data = document.getElementById('f_data').value;
   const ano = yearOf(data);
   const h = readFormHours();
-  const totalHoras = isSimple(formType) ? (h.horas||0) : (h.semDia||0) + (h.semNoite||0) + (h.fdsDia||0) + (h.fdsNoite||0);
+  const totalHoras = (isSimple(formType)||formType==='formacao') ? (h.horas||0) : (h.semDia||0) + (h.semNoite||0) + (h.fdsDia||0) + (h.fdsNoite||0);
   const totalHorasEl = document.getElementById('totalHorasDisplay');
   if(totalHorasEl) totalHorasEl.textContent = totalHoras>0 ? `${(Math.round(totalHoras*100)/100)}h feitas` : '';
   const c = computeCalc(formType, ano, h, formGrau);
   const box = document.getElementById('calcPreview');
   if(!c || (isSimple(formType) && !(c.rateUsed && simpleRate(c.rateUsed, formSub)>0))){
     box.innerHTML = `<div class="row">Sem tarifa definida para ${ano} (categoria ${catLabel(formType)}${formType==='prevencao'?(' · '+(formGrau==='chefe'?'Chefe':'Praça')):''}). Defina em "Tarifas".</div>`;
+    return;
+  }
+  if(formType==='formacao'){
+    box.innerHTML = `
+    <div class="row"><span>Horas × valor/hora</span><span>${(Math.round(totalHoras*100)/100)}h × ${euro(h.valorHora)}</span></div>
+    <div class="row total"><span>Total a pagar</span><span>${euro(c.totalPagar)}</span></div>`;
     return;
   }
   box.innerHTML = `
@@ -1161,6 +1212,9 @@ function saveRecord(){
   const c = computeCalc(formType, ano, h, formGrau);
   const editId = document.getElementById('editId').value;
   const simple = isSimple(formType);
+  const formac = formType==='formacao';
+  if(formac && !(h.horas>0)){ toast('Indique o número de horas'); return; }
+  if(formac && !(h.valorHora>0)){ toast('Indique o valor à hora'); return; }
   if(simple && !(c && c.rateUsed && simpleRate(c.rateUsed, formSub)>0)){ toast('Defina primeiro o valor à hora em Tarifas'); return; }
   if(simple && !(h.horas>0)){ toast('Indique as horas (início e fim)'); return; }
 
@@ -1168,12 +1222,14 @@ function saveRecord(){
     id: editId || ('u'+Date.now()),
     categoria: formType,
     tipo, data, ano,
-    inicio: document.getElementById('f_inicio').value,
-    fim: document.getElementById('f_fim').value,
-    semDia: simple?0:h.semDia, semNoite: simple?0:h.semNoite, fdsDia: simple?0:h.fdsDia, fdsNoite: simple?0:h.fdsNoite,
-    horas: simple ? h.horas : 0,
+    inicio: formac ? '' : document.getElementById('f_inicio').value,
+    fim: formac ? '' : document.getElementById('f_fim').value,
+    semDia: (simple||formac)?0:h.semDia, semNoite: (simple||formac)?0:h.semNoite, fdsDia: (simple||formac)?0:h.fdsDia, fdsNoite: (simple||formac)?0:h.fdsNoite,
+    horas: (simple||formac) ? h.horas : 0,
+    entidade: formac ? document.getElementById('f_entidade').value.trim() : undefined,
+    valorHora: formac ? h.valorHora : undefined,
     sub: simple ? formSub : undefined,
-    palm: simple?0:h.palm,
+    palm: (simple||formac)?0:h.palm,
     refeicao: formType==='reforco' ? h.refeicao : 0,
     almjant: formType==='prevencao' ? h.almjant : 0,
     grau: formType==='prevencao' ? formGrau : undefined,
@@ -1351,7 +1407,7 @@ function printCurrentView(){
   if(view==='dashboard'){
     const sel = document.getElementById('dashYear').value;
     title = 'Resumo — ' + (sel==='all' ? 'Todos os anos' : sel);
-    meta = `Reforços: ${document.getElementById('kpiReforco').textContent} · Prevenções: ${document.getElementById('kpiPrevencao').textContent} · Aeroporto: ${document.getElementById('kpiAeroporto').textContent} · Total: ${document.getElementById('kpiTotal').textContent}`;
+    meta = `Reforços: ${document.getElementById('kpiReforco').textContent} · Prevenções: ${document.getElementById('kpiPrevencao').textContent} · Aeroporto: ${document.getElementById('kpiAeroporto').textContent} · Formações: ${document.getElementById('kpiFormacao').textContent} · Total: ${document.getElementById('kpiTotal').textContent}`;
   } else if(view==='historico'){
     const ano = document.getElementById('filtAno').value;
     const cat = document.getElementById('filtCategoria').value;
