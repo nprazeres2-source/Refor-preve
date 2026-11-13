@@ -59,8 +59,8 @@
   }
   .tabbar-inner{display:flex;max-width:1000px;width:100%;}
   .tab{
-    flex:1;text-align:center;padding:10px 4px 8px;background:none;border:none;color:var(--muted);
-    font-size:11px;cursor:pointer;font-family:var(--font);display:flex;flex-direction:column;align-items:center;gap:3px;
+    flex:1;text-align:center;padding:10px 1px 8px;background:none;border:none;color:var(--muted);
+    font-size:10px;cursor:pointer;font-family:var(--font);display:flex;flex-direction:column;align-items:center;gap:3px;
   }
   .tab.active{color:var(--amber);}
   .tab svg{width:20px;height:20px;}
@@ -182,6 +182,17 @@
   .tag-cat.aeroporto{background:rgba(91,143,217,.18);color:var(--sky);}
   .tag-cat.prolongamento{background:rgba(160,124,214,.18);color:var(--violet);}
   .tag-cat.formacao{background:rgba(217,112,138,.18);color:var(--rose);}
+  .stat-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;}
+  .stat-table th,.stat-table td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right;}
+  .stat-table th:first-child,.stat-table td:first-child{text-align:left;}
+  .stat-table th{color:var(--muted);font-weight:600;font-size:11px;}
+  .stat-line{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .stat-line:last-child{border-bottom:none;}
+  .stat-line .k{color:var(--muted);}
+  .stat-line .v{text-align:right;font-weight:600;}
+  .up{color:var(--teal);} .down{color:#d9695f;}
+  .bar-row.wide{grid-template-columns:44px 1fr 122px;}
+  .bar-row.wide .bar-amt{font-size:11px;}
   .empty-msg{text-align:center;color:var(--muted);padding:30px 10px;font-size:13px;}
 
   /* Tarifas */
@@ -251,6 +262,8 @@
     .rate-table{min-width:0;width:100%;}
     .rate-table input{width:100%;min-width:44px;}
     .rate-table th,.rate-table td{color:#000;}
+    .stat-table th,.stat-table td,.stat-line .k,.stat-line .v{color:#000;}
+    .stat-table th,.stat-table td,.stat-line{border-color:#ccc;}
     .rate-table th:first-child,.rate-table td:first-child{background:#fff !important;}
     .rate-table th{border-bottom:2px solid #999;}
     .app{max-width:100%;}
@@ -405,6 +418,22 @@
     <div id="pesqList"></div>
   </div>
 
+  <!-- ESTATISTICAS -->
+  <div class="view" id="view-estatisticas">
+    <h2 style="font-size:16px;margin-bottom:10px;">Estatísticas</h2>
+    <div class="filters">
+      <select id="statAno" onchange="renderEstatisticas()"><option value="">Todos os anos</option></select>
+      <select id="statCat" onchange="renderEstatisticas()">
+        <option value="">Todas as categorias</option>
+        <option value="reforco">Reforços</option>
+        <option value="prevencao">Prevenções</option>
+        <option value="aeroporto">Aeroporto</option>
+        <option value="formacao">Formações</option>
+      </select>
+    </div>
+    <div id="statBody"></div>
+  </div>
+
   <!-- NOVO (chooser handled via modal forms) -->
   <div class="view" id="view-novo">
     <h2 style="font-size:16px;margin-bottom:14px;">Novo registo</h2>
@@ -473,6 +502,10 @@
       <button class="tab" data-view="pesquisa" onclick="showView('pesquisa')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         Pesquisa
+      </button>
+      <button class="tab" data-view="estatisticas" onclick="showView('estatisticas')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+        Estatísticas
       </button>
       <button class="tab" data-view="novo" onclick="showView('novo')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
@@ -680,6 +713,7 @@ function showView(name){
   if(name==='dashboard') renderDashboard();
   if(name==='historico') renderHistorico();
   if(name==='pesquisa') renderPesquisa();
+  if(name==='estatisticas') renderEstatisticas();
   if(name==='tarifas') renderRateTable();
 }
 
@@ -777,6 +811,12 @@ function populateYearSelects(){
   filtSel.innerHTML = '<option value="">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
   filtSel.value = [...filtSel.options].some(o=>o.value===curF) ? curF : '';
 
+  const statSel = document.getElementById('statAno');
+  if(statSel){
+    const curS = statSel.value;
+    statSel.innerHTML = '<option value="">Todos os anos</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
+    statSel.value = [...statSel.options].some(o=>o.value===curS) ? curS : '';
+  }
   const pesqSel = document.getElementById('pesqAno');
   if(pesqSel){
     const curP = pesqSel.value;
@@ -920,6 +960,131 @@ function renderHistorico(){
   if(cat) recs = recs.filter(r=>r.categoria===cat);
   recs.sort((a,b)=> (b.data||'').localeCompare(a.data||''));
   document.getElementById('histList').innerHTML = recs.map(histItemHtml).join('') || '<div class="empty-msg">Sem registos para este filtro</div>';
+}
+
+/* ============ ESTATÍSTICAS ============ */
+const MESES_LONGO = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+function fmtH(n){ return (Math.round((n||0)*100)/100).toLocaleString('pt-PT') + 'h'; }
+function catOf(r){ return r.categoria==='prolongamento' ? 'aeroporto' : (CAT_KEYS.includes(r.categoria) ? r.categoria : 'prevencao'); }
+function aggr(recs){
+  let eur=0, h=0;
+  recs.forEach(r=>{ eur+=pagarOf(r); h+=hoursOf(r); });
+  return {n:recs.length, eur, h};
+}
+function pct(a,b){ return b>0 ? Math.round(a/b*1000)/10 : 0; }
+function pctTxt(a,b){ return pct(a,b).toLocaleString('pt-PT') + '%'; }
+function deltaHtml(cur, prev){
+  if(!(prev>0)) return '—';
+  const d = (cur-prev)/prev*100;
+  return `<span class="${d>=0?'up':'down'}">${d>=0?'+':''}${(Math.round(d*10)/10).toLocaleString('pt-PT')}%</span>`;
+}
+function renderEstatisticas(){
+  populateYearSelects();
+  const ano = document.getElementById('statAno').value;
+  const cat = document.getElementById('statCat').value;
+  const base = state.records.filter(r=>!cat || catOf(r)===cat);
+  const recs = base.filter(r=>!ano || r.ano===Number(ano));
+  const box = document.getElementById('statBody');
+  if(!recs.length){ box.innerHTML = '<div class="empty-msg">Sem registos para este filtro</div>'; return; }
+  const T = aggr(recs);
+  let html = `<div class="kpi-row">
+    <div class="kpi geral"><div class="lbl">Total a pagar</div><div class="val">${euro(T.eur)}</div></div>
+    <div class="kpi reforco"><div class="lbl">Horas feitas</div><div class="val">${fmtH(T.h)}</div></div>
+    <div class="kpi prevencao"><div class="lbl">Nº registos</div><div class="val">${T.n}</div></div>
+  </div>
+  <div class="kpi-row" style="grid-template-columns:repeat(2,1fr);">
+    <div class="kpi geral"><div class="lbl">Média por hora (líquido)</div><div class="val">${T.h>0?euro(T.eur/T.h):'—'}</div></div>
+    <div class="kpi geral"><div class="lbl">Média por registo</div><div class="val">${euro(T.eur/T.n)}</div></div>
+  </div>`;
+
+  // por categoria
+  const rows = CAT_KEYS.map(k=>{
+    const a = aggr(recs.filter(r=>catOf(r)===k));
+    return a.n ? `<tr><td><span class="tag-cat ${k}" style="padding:2px 7px;border-radius:999px;font-size:11px;">${CATS[k].plural}</span></td><td>${a.n}</td><td>${fmtH(a.h)}</td><td>${euro(a.eur)}</td><td>${pctTxt(a.eur,T.eur)}</td></tr>` : '';
+  }).join('');
+  html += `<div class="card"><h2>Por categoria</h2>
+    <table class="stat-table"><tr><th>Categoria</th><th>Nº</th><th>Horas</th><th>Total</th><th>%</th></tr>${rows}</table></div>`;
+
+  // evolução
+  let evoTitle, evo;
+  if(ano){
+    evoTitle = `Evolução mensal — ${ano}`;
+    evo = MESES_LONGO.map((m,i)=>Object.assign({nome:m.slice(0,3), full:m},
+      aggr(recs.filter(r=>r.data && (parseInt(r.data.slice(5,7))-1)===i))));
+  } else {
+    evoTitle = 'Evolução por ano';
+    const ys = Array.from(new Set(recs.map(r=>r.ano))).sort((a,b)=>a-b);
+    evo = ys.map(y=>Object.assign({nome:String(y), full:String(y)}, aggr(recs.filter(r=>r.ano===y))));
+  }
+  const maxE = Math.max(1, ...evo.map(e=>e.eur));
+  html += `<div class="card"><h2>${evoTitle}</h2><div class="bars">` + evo.map(e=>`<div class="bar-row wide">
+      <div>${e.nome}</div>
+      <div class="bar-track"><div class="bar-seg prevencao" style="width:${(e.eur/maxE*100).toFixed(1)}%"></div></div>
+      <div class="bar-amt">${e.n?euro(e.eur)+' · '+fmtH(e.h):'—'}</div></div>`).join('') + `</div></div>`;
+
+  // destaques
+  const ativos = evo.filter(e=>e.n>0);
+  const topEur = [...ativos].sort((a,b)=>b.eur-a.eur)[0];
+  const topH = [...ativos].sort((a,b)=>b.h-a.h)[0];
+  const dias = new Set(recs.map(r=>r.data).filter(Boolean)).size;
+  const best = [...recs].sort((a,b)=>pagarOf(b)-pagarOf(a))[0];
+  const perUnit = ano ? 'mês' : 'ano';
+  let dest = '';
+  const L = (k,v)=>`<div class="stat-line"><span class="k">${k}</span><span class="v">${v}</span></div>`;
+  dest += L(`${ano?'Melhor mês':'Melhor ano'} (valor)`, `${topEur.full} · ${euro(topEur.eur)}`);
+  dest += L(`${ano?'Mês':'Ano'} com mais horas`, `${topH.full} · ${fmtH(topH.h)}`);
+  dest += L(`Média por ${perUnit} (com registos)`, `${euro(T.eur/ativos.length)} · ${fmtH(T.h/ativos.length)}`);
+  dest += L('Dias com serviço', dias);
+  if(best) dest += L('Registo mais bem pago', `${escapeHtml(best.tipo||'')} · ${formatDatePT(best.data)} · ${euro(pagarOf(best))}`);
+  html += `<div class="card"><h2>Destaques</h2>${dest}</div>`;
+
+  // comparação com ano anterior
+  if(ano){
+    const prevRecs = base.filter(r=>r.ano===Number(ano)-1);
+    if(prevRecs.length){
+      const P = aggr(prevRecs);
+      html += `<div class="card"><h2>Comparação com ${Number(ano)-1}</h2>
+        ${L('Total a pagar', `${euro(T.eur)} <span style="color:var(--muted);font-weight:400">(antes ${euro(P.eur)})</span> ${deltaHtml(T.eur,P.eur)}`)}
+        ${L('Horas feitas', `${fmtH(T.h)} <span style="color:var(--muted);font-weight:400">(antes ${fmtH(P.h)})</span> ${deltaHtml(T.h,P.h)}`)}
+        ${L('Nº registos', `${T.n} <span style="color:var(--muted);font-weight:400">(antes ${P.n})</span> ${deltaHtml(T.n,P.n)}`)}</div>`;
+    }
+  }
+
+  // distribuição das horas (prevenção/reforço)
+  const blocos = [['Semana · dia','semDia'],['Semana · noite','semNoite'],['Fim-de-semana · dia','fdsDia'],['Fim-de-semana · noite','fdsNoite']];
+  const sums = blocos.map(([l,k])=>[l, recs.reduce((a,r)=>a+(r[k]||0),0)]);
+  const totB = sums.reduce((a,x)=>a+x[1],0);
+  const outras = recs.reduce((a,r)=>a+(r.horas||0),0);
+  if(totB>0){
+    html += `<div class="card"><h2>Tipo de horas (reforços e prevenções)</h2><div class="bars">` + sums.map(([l,v])=>`<div class="bar-row" style="grid-template-columns:120px 1fr 86px;">
+      <div>${l}</div><div class="bar-track"><div class="bar-seg reforco" style="width:${pct(v,totB)}%"></div></div>
+      <div class="bar-amt">${fmtH(v)} · ${pctTxt(v,totB)}</div></div>`).join('') + `</div>` +
+      (outras>0 ? `<div class="hint" style="margin-top:8px;">Aeroporto e formações (${fmtH(outras)}) têm valor à hora único e não entram nesta divisão.</div>` : '') + `</div>`;
+  }
+
+  // atividades
+  const groups = {};
+  recs.forEach(r=>{
+    const k = normalizeTipoKey(r.tipo);
+    (groups[k] = groups[k] || []).push(r);
+  });
+  const top = Object.entries(groups).map(([k,rs])=>Object.assign({k}, aggr(rs))).sort((a,b)=>b.eur-a.eur).slice(0,10);
+  html += `<div class="card"><h2>Atividades com mais valor</h2>
+    <table class="stat-table"><tr><th>Atividade</th><th>Nº</th><th>Horas</th><th>Total</th></tr>` +
+    top.map(t=>`<tr><td>${escapeHtml(tipoLabel(t.k))}</td><td>${t.n}</td><td>${fmtH(t.h)}</td><td>${euro(t.eur)}</td></tr>`).join('') +
+    `</table></div>`;
+
+  // chefe vs praça
+  const prevs = recs.filter(r=>catOf(r)==='prevencao');
+  const ch = prevs.filter(r=>r.grau==='chefe'), pr = prevs.filter(r=>r.grau!=='chefe');
+  if(ch.length && pr.length){
+    const C=aggr(ch), P=aggr(pr);
+    html += `<div class="card"><h2>Prevenções por grau</h2>
+      <table class="stat-table"><tr><th>Grau</th><th>Nº</th><th>Horas</th><th>Total</th></tr>
+      <tr><td>Chefe</td><td>${C.n}</td><td>${fmtH(C.h)}</td><td>${euro(C.eur)}</td></tr>
+      <tr><td>Praça</td><td>${P.n}</td><td>${fmtH(P.h)}</td><td>${euro(P.eur)}</td></tr></table></div>`;
+  }
+  box.innerHTML = html;
 }
 
 /* ============ PESQUISA ============ */
@@ -1427,6 +1592,10 @@ function printCurrentView(){
            `Horas feitas: ${document.getElementById('pesqHoras').textContent} · `+
            `Nº registos: ${document.getElementById('pesqCount').textContent} · `+
            `Total a pagar: ${document.getElementById('pesqTotal').textContent}`;
+  } else if(view==='estatisticas'){
+    const sa = document.getElementById('statAno').value;
+    title = 'Estatísticas — ' + (sa || 'Todos os anos');
+    meta = catPlural(document.getElementById('statCat').value);
   } else if(view==='tarifas'){
     const cat = document.getElementById('rateCategoria').value;
     const catLbl = cat==='prevencao' ? 'Prevenção / Descarga' : catLabel(cat);
