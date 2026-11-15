@@ -539,8 +539,9 @@
     <div id="wrap_subtipo" style="display:none;">
       <label>Serviço de aeroporto</label>
       <div class="seg-toggle">
-        <button type="button" class="seg-btn aeroporto" id="subNormal" onclick="setSub('normal')">Aeroporto</button>
-        <button type="button" class="seg-btn aeroporto" id="subProl" onclick="setSub('prolongamento')">Prolongamento</button>
+        <button type="button" class="seg-btn aeroporto" style="flex:1 1 30%;padding:9px 4px;" id="subNormal" onclick="setSub('normal')">Aeroporto</button>
+        <button type="button" class="seg-btn aeroporto" style="flex:1 1 30%;padding:9px 4px;" id="subProl" onclick="setSub('prolongamento')">Prolongamento</button>
+        <button type="button" class="seg-btn aeroporto" style="flex:1 1 30%;padding:9px 4px;" id="subReab" onclick="setSub('reabertura')">Reabertura</button>
       </div>
     </div>
 
@@ -568,6 +569,18 @@
       <input type="number" step="0.01" min="0" id="f_valorHora" value="0" oninput="updatePreview()">
     </div>
 
+    <div id="wrap_aero" style="display:none;margin-top:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <label style="margin:0;">Horas feitas</label>
+        <span id="aeroTotalDisplay" style="font-size:12px;color:var(--muted);"></span>
+      </div>
+      <p class="hint" style="margin-top:2px;margin-bottom:8px;">Calculado automaticamente a partir do início/fim (dias úteis ou fim-de-semana/feriado). Pode ajustar.</p>
+      <div class="grid2">
+        <div><label>Dias úteis (h)</label><input type="number" step="0.25" min="0" id="f_aeroUtil" value="0" oninput="updatePreview()"></div>
+        <div><label>Fim-sem./feriado (h)</label><input type="number" step="0.25" min="0" id="f_aeroFds" value="0" oninput="updatePreview()"></div>
+      </div>
+    </div>
+
     <div id="wrap_horas" style="display:none;margin-top:14px;">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <label style="margin:0;">Horas feitas</label>
@@ -589,10 +602,10 @@
       <div><label>Fim-de-sem. dia</label><input type="number" step="0.25" min="0" id="f_fdsDia" value="0" oninput="updatePreview()"></div>
       <div><label>Fim-de-sem. noite</label><input type="number" step="0.25" min="0" id="f_fdsNoite" value="0" oninput="updatePreview()"></div>
     </div>
-    <div class="grid2">
+    </div>
+    <div class="grid2" id="wrap_refeicoes">
       <div><label>Pequeno-almoço (nº)</label><input type="number" step="1" min="0" id="f_palm" value="0" oninput="updatePreview()"></div>
       <div id="wrap_refeicao_label"><label>Refeição (nº)</label><input type="number" step="1" min="0" id="f_refeicao" value="0" oninput="updatePreview()"></div>
-    </div>
     </div>
 
     <div id="wrap_grau">
@@ -719,6 +732,13 @@ function showView(name){
 
 /* ============ RATES ============ */
 function ratesFor(categoria, ano, grau){
+  if(isSimple(categoria)){
+    const cat = state.rates.aeroporto || {};
+    const years = Object.keys(cat).map(Number).sort((a,b)=>a-b);
+    const y = cat[ano] ? ano : (years.filter(x=>x<=ano).pop() ?? years.find(x=>x>ano));
+    if(y===undefined) return null;
+    return Object.assign({}, aeroSub(cat[y], grau), {fator: cat[y].fator || 1.08});
+  }
   if(categoria==='prevencao'){
     const cat = state.rates.prevencao || {};
     const years = Object.keys(cat).map(Number).sort((a,b)=>a-b);
@@ -744,7 +764,39 @@ const CATS = {
 };
 const CAT_KEYS = ['reforco','prevencao','aeroporto','formacao'];
 function isSimple(c){ return c==='aeroporto'; }   // valor à hora (Aeroporto ou Prolongamento)
-function simpleRate(rt, sub){ return rt ? ((sub==='prolongamento' ? rt.horaProl : rt.hora)||0) : 0; }
+const SUBS = {normal:'Aeroporto', prolongamento:'Prolongamento', reabertura:'Reabertura'};
+function subLabel(v){ return SUBS[v] || SUBS.normal; }
+function zeroAero(){ return {util:0, fds:0, palm:0, almjant:0}; }
+function emptyAeroYear(){ return {normal:zeroAero(), prolongamento:zeroAero(), reabertura:zeroAero(), fator:1.08}; }
+// converte entradas antigas ({hora,horaProl}) para o formato novo
+function migrateAeroEntry(e){
+  if(!e) return e;
+  if(e.hora!==undefined || e.horaProl!==undefined){
+    e.normal = e.normal || {util:e.hora||0, fds:e.hora||0, palm:0, almjant:0};
+    e.prolongamento = e.prolongamento || {util:e.horaProl||0, fds:e.horaProl||0, palm:0, almjant:0};
+    delete e.hora; delete e.horaProl;
+  }
+  ['normal','prolongamento','reabertura'].forEach(k=>{ e[k] = Object.assign(zeroAero(), e[k]||{}); });
+  return e;
+}
+// partes de uma tarifa de aeroporto, sem alterar os dados
+function aeroSub(entry, sub){
+  if(!entry) return null;
+  const k = sub || 'normal';
+  if(entry[k] && typeof entry[k]==='object') return Object.assign(zeroAero(), entry[k]);
+  if(entry.hora!==undefined || entry.horaProl!==undefined){
+    const v = (k==='prolongamento' ? entry.horaProl : k==='normal' ? entry.hora : 0) || 0;
+    return {util:v, fds:v, palm:0, almjant:0};
+  }
+  return zeroAero();
+}
+// tarifa em falta para as horas indicadas?
+function aeroMissing(r, h){
+  if(!r) return true;
+  if((h.aeroUtil||0)>0 && !(r.util>0)) return true;
+  if((h.aeroFds||0)>0 && !(r.fds>0)) return true;
+  return !((h.aeroUtil||0)>0 || (h.aeroFds||0)>0);
+}
 let formSub = 'normal';
 function catLabel(c){ return (CATS[c]||CATS.prevencao).label; }
 function catPlural(c){ return c ? (CATS[c]||CATS.prevencao).plural : 'Todas as categorias'; }
@@ -774,10 +826,12 @@ function computeCalc(categoria, ano, h, grau){
     const total = (h.horas||0) * (h.valorHora||0);
     return {total, desconto:0, totalPagar:total, fator:1};
   }
-  const r = ratesFor(categoria, ano, grau);
+  const r = ratesFor(categoria, ano, isSimple(categoria) ? h.sub : grau);
   if(!r) return null;
   if(isSimple(categoria)){
-    const total = (h.horas||0) * simpleRate(r, h.sub);
+    const hasSplit = (h.aeroUtil!==undefined || h.aeroFds!==undefined);
+    const hu = hasSplit ? (h.aeroUtil||0) : (h.horas||0), hf = hasSplit ? (h.aeroFds||0) : 0;
+    const total = hu*r.util + hf*r.fds + (h.palm||0)*r.palm + (h.almjant||0)*r.almjant;
     const fator = r.fator || 1.08;
     const totalPagar = total / fator;
     return {total, desconto: total-totalPagar, totalPagar, fator, rateUsed: r};
@@ -884,6 +938,8 @@ function horasBreakdown(r){
   const parts = [];
   if(r.semDia) parts.push(`Sem. dia ${r.semDia}h`);
   if(r.semNoite) parts.push(`Sem. noite ${r.semNoite}h`);
+  if(r.aeroUtil) parts.push(`Úteis ${r.aeroUtil}h`);
+  if(r.aeroFds) parts.push(`Fds/feriado ${r.aeroFds}h`);
   if(r.fdsDia) parts.push(`Fds dia ${r.fdsDia}h`);
   if(r.fdsNoite) parts.push(`Fds noite ${r.fdsNoite}h`);
   return parts.join(' · ');
@@ -892,7 +948,7 @@ function histItemHtml(r){
   const c = calcForRecord(r);
   const pagar = c ? c.totalPagar : r.total/1.08;
   const equipaLine = r.categoria==='formacao' ? [r.entidade, (r.valorHora!=null ? euro(r.valorHora)+'/h' : '')].filter(Boolean).join(' · ') : ((r.equipa && r.equipa.length) ? r.equipa.join(', ') : '');
-  const grauLabel = r.categoria==='prevencao' ? (r.grau==='chefe'?'Chefe':'Praça') : (r.sub==='prolongamento' ? 'Prolongamento' : '');
+  const grauLabel = r.categoria==='prevencao' ? (r.grau==='chefe'?'Chefe':'Praça') : (isSimple(r.categoria) && r.sub && r.sub!=='normal' ? subLabel(r.sub) : '');
   const horas = hoursOf(r);
   const horasTxt = `${Math.round(horas*100)/100}h`;
   const breakdown = horasBreakdown(r);
@@ -1128,7 +1184,7 @@ function openDetail(id){
   html += row('Tipo', r.tipo);
   html += row('Categoria', r.categoria==='prevencao' ? 'Prevenção / Descarga' : catLabel(r.categoria));
   if(r.categoria==='formacao' && r.entidade) html += row('Entidade', escapeHtml(r.entidade));
-  if(isSimple(r.categoria)) html += row('Serviço', r.sub==='prolongamento' ? 'Prolongamento' : 'Aeroporto');
+  if(isSimple(r.categoria)) html += row('Serviço', subLabel(r.sub));
   if(r.categoria==='prevencao') html += row('Grau', r.grau==='chefe'?'Chefe':'Praça');
   html += row('Data', formatDatePT(r.data));
   if(r.inicio) html += row('Início', r.inicio);
@@ -1138,8 +1194,11 @@ function openDetail(id){
   if(r.categoria==='formacao'){
     html += row('Valor à hora', euro(r.valorHora||0));
   } else if(isSimple(r.categoria)){
-    const rt = ratesFor(r.categoria, r.ano);
-    if(rt) html += row('Valor à hora', euro(simpleRate(rt, r.sub)));
+    const rt = ratesFor(r.categoria, r.ano, r.sub);
+    html += row('Dias úteis', `${r.aeroUtil!==undefined ? r.aeroUtil : (r.horas||0)}h` + (rt ? ` × ${euro(rt.util)}` : ''));
+    html += row('Fim-de-semana / feriado', `${r.aeroFds||0}h` + (rt ? ` × ${euro(rt.fds)}` : ''));
+    html += row('Pequeno-almoço', r.palm||0);
+    html += row('Almoço/Jantar', r.almjant||0);
   } else {
     html += row('Semana dia / noite', `${r.semDia||0}h / ${r.semNoite||0}h`);
     html += row('Fim-de-semana dia / noite', `${r.fdsDia||0}h / ${r.fdsNoite||0}h`);
@@ -1168,6 +1227,7 @@ function setSub(v){
   formSub = v;
   document.getElementById('subNormal').classList.toggle('active', v==='normal');
   document.getElementById('subProl').classList.toggle('active', v==='prolongamento');
+  document.getElementById('subReab').classList.toggle('active', v==='reabertura');
   updatePreview();
 }
 
@@ -1200,6 +1260,8 @@ function openForm(type, editId){
     document.getElementById('f_fdsNoite').value = r.fdsNoite||0;
     document.getElementById('f_palm').value = r.palm||0;
     document.getElementById('f_horas').value = r.horas||0;
+    document.getElementById('f_aeroUtil').value = r.aeroUtil!==undefined ? r.aeroUtil : (r.categoria==='aeroporto' ? (r.horas||0) : 0);
+    document.getElementById('f_aeroFds').value = r.aeroFds||0;
     document.getElementById('f_entidade').value = r.entidade||'';
     document.getElementById('f_valorHora').value = r.valorHora||0;
     equipaList = (r.equipa||[]).slice();
@@ -1218,6 +1280,8 @@ function openForm(type, editId){
     document.getElementById('f_fdsNoite').value = 0;
     document.getElementById('f_palm').value = 0;
     document.getElementById('f_horas').value = 0;
+    document.getElementById('f_aeroUtil').value = 0;
+    document.getElementById('f_aeroFds').value = 0;
     document.getElementById('f_entidade').value = '';
     document.getElementById('f_valorHora').value = 0;
   }
@@ -1245,14 +1309,16 @@ function switchFormType(type){
   document.getElementById('wrap_formacao').style.display = form ? 'block' : 'none';
   document.getElementById('hintHorasSimples').style.display = form ? 'none' : 'block';
   document.getElementById('lbl_tipo').textContent = form ? 'Nome da formação' : 'Tipo de serviço';
-  document.getElementById('wrap_feriado').style.display = simple ? 'none' : 'flex';
+  document.getElementById('wrap_feriado').style.display = form ? 'none' : 'flex';
   document.getElementById('wrap_blocos').style.display = (simple||form) ? 'none' : 'block';
-  document.getElementById('wrap_horas').style.display = (simple||form) ? 'block' : 'none';
+  document.getElementById('wrap_aero').style.display = simple ? 'block' : 'none';
+  document.getElementById('wrap_refeicoes').style.display = form ? 'none' : 'grid';
+  document.getElementById('wrap_horas').style.display = form ? 'block' : 'none';
   document.getElementById('wrap_subtipo').style.display = simple ? 'block' : 'none';
   document.getElementById('wrap_equipa').style.display = isPrev ? 'block' : 'none';
   document.getElementById('wrap_grau').style.display = isPrev ? 'block' : 'none';
   document.getElementById('autoHoursHint').style.display = 'block';
-  document.getElementById('wrap_refeicao_label').querySelector('label').textContent = isPrev ? 'Almoço/Jantar (nº)' : 'Refeição (nº)';
+  document.getElementById('wrap_refeicao_label').querySelector('label').textContent = (isPrev||simple) ? 'Almoço/Jantar (nº)' : 'Refeição (nº)';
   document.getElementById('formSaveBtn').className = 'btn btn-primary' + (type!=='prevencao' ? ' '+type : '');
   updatePreview();
 }
@@ -1278,7 +1344,9 @@ function readFormHours(){
     palm: parseFloat(document.getElementById('f_palm').value)||0,
     refeicao: parseFloat(document.getElementById('f_refeicao').value)||0,
     almjant: parseFloat(document.getElementById('f_refeicao').value)||0,
-    horas: parseFloat(document.getElementById('f_horas').value)||0,
+    horas: isSimple(formType) ? ((parseFloat(document.getElementById('f_aeroUtil').value)||0) + (parseFloat(document.getElementById('f_aeroFds').value)||0)) : (parseFloat(document.getElementById('f_horas').value)||0),
+    aeroUtil: parseFloat(document.getElementById('f_aeroUtil').value)||0,
+    aeroFds: parseFloat(document.getElementById('f_aeroFds').value)||0,
     sub: formSub,
     valorHora: parseFloat(document.getElementById('f_valorHora').value)||0,
   };
@@ -1316,6 +1384,24 @@ function splitShiftHours(dateStr, inicio, fim, feriado){
   return buckets;
 }
 
+// horas em dias úteis vs fim-de-semana/feriado (sem separação dia/noite)
+function splitUtilFds(dateStr, inicio, fim, feriado){
+  const start = new Date(dateStr+'T'+inicio+':00');
+  let end = new Date(dateStr+'T'+fim+':00');
+  if(end <= start) end = new Date(end.getTime() + 24*3600*1000);
+  let util=0, fds=0, cur = new Date(start);
+  while(cur < end){
+    let boundary = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate()+1, 0, 0, 0);
+    if(boundary > end) boundary = end;
+    const hrs = (boundary - cur) / 3600000;
+    const segDate = `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`;
+    const dow = cur.getDay();
+    if(dow===0 || dow===6 || (feriado && segDate===dateStr)) fds += hrs; else util += hrs;
+    cur = boundary;
+  }
+  return {util: Math.round(util*100)/100, fds: Math.round(fds*100)/100};
+}
+
 function autoCalcHours(){
   const data = document.getElementById('f_data').value;
   const inicio = document.getElementById('f_inicio').value;
@@ -1324,10 +1410,9 @@ function autoCalcHours(){
   if(formType==='formacao'){ updatePreview(); return; }
   if(isSimple(formType)){
     if(data && inicio && fim){
-      const st = new Date(data+'T'+inicio+':00');
-      let en = new Date(data+'T'+fim+':00');
-      if(en <= st) en = new Date(en.getTime() + 24*3600*1000);
-      document.getElementById('f_horas').value = Math.round((en-st)/3600000*100)/100;
+      const u = splitUtilFds(data, inicio, fim, feriado);
+      document.getElementById('f_aeroUtil').value = u.util;
+      document.getElementById('f_aeroFds').value = u.fds;
     }
     updatePreview();
     return;
@@ -1346,11 +1431,13 @@ function updatePreview(){
   const ano = yearOf(data);
   const h = readFormHours();
   const totalHoras = (isSimple(formType)||formType==='formacao') ? (h.horas||0) : (h.semDia||0) + (h.semNoite||0) + (h.fdsDia||0) + (h.fdsNoite||0);
+  const aeroEl = document.getElementById('aeroTotalDisplay');
+  if(aeroEl) aeroEl.textContent = (isSimple(formType) && totalHoras>0) ? `${Math.round(totalHoras*100)/100}h feitas` : '';
   const totalHorasEl = document.getElementById('totalHorasDisplay');
   if(totalHorasEl) totalHorasEl.textContent = totalHoras>0 ? `${(Math.round(totalHoras*100)/100)}h feitas` : '';
   const c = computeCalc(formType, ano, h, formGrau);
   const box = document.getElementById('calcPreview');
-  if(!c || (isSimple(formType) && !(c.rateUsed && simpleRate(c.rateUsed, formSub)>0))){
+  if(!c || (isSimple(formType) && aeroMissing(c.rateUsed, h))){
     box.innerHTML = `<div class="row">Sem tarifa definida para ${ano} (categoria ${catLabel(formType)}${formType==='prevencao'?(' · '+(formGrau==='chefe'?'Chefe':'Praça')):''}). Defina em "Tarifas".</div>`;
     return;
   }
@@ -1371,7 +1458,7 @@ function updatePreview(){
 function saveRecord(){
   const data = document.getElementById('f_data').value;
   if(!data){ toast('Indique a data'); return; }
-  const tipo = document.getElementById('f_tipo').value.trim() || (isSimple(formType) && formSub==='prolongamento' ? 'Prolongamento' : catLabel(formType));
+  const tipo = document.getElementById('f_tipo').value.trim() || (isSimple(formType) ? subLabel(formSub) : catLabel(formType));
   const ano = yearOf(data);
   const h = readFormHours();
   const c = computeCalc(formType, ano, h, formGrau);
@@ -1380,8 +1467,8 @@ function saveRecord(){
   const formac = formType==='formacao';
   if(formac && !(h.horas>0)){ toast('Indique o número de horas'); return; }
   if(formac && !(h.valorHora>0)){ toast('Indique o valor à hora'); return; }
-  if(simple && !(c && c.rateUsed && simpleRate(c.rateUsed, formSub)>0)){ toast('Defina primeiro o valor à hora em Tarifas'); return; }
   if(simple && !(h.horas>0)){ toast('Indique as horas (início e fim)'); return; }
+  if(simple && (!c || aeroMissing(c.rateUsed, h))){ toast('Defina primeiro o valor à hora em Tarifas'); return; }
 
   const rec = {
     id: editId || ('u'+Date.now()),
@@ -1391,12 +1478,14 @@ function saveRecord(){
     fim: formac ? '' : document.getElementById('f_fim').value,
     semDia: (simple||formac)?0:h.semDia, semNoite: (simple||formac)?0:h.semNoite, fdsDia: (simple||formac)?0:h.fdsDia, fdsNoite: (simple||formac)?0:h.fdsNoite,
     horas: (simple||formac) ? h.horas : 0,
+    aeroUtil: simple ? h.aeroUtil : undefined,
+    aeroFds: simple ? h.aeroFds : undefined,
     entidade: formac ? document.getElementById('f_entidade').value.trim() : undefined,
     valorHora: formac ? h.valorHora : undefined,
     sub: simple ? formSub : undefined,
-    palm: (simple||formac)?0:h.palm,
+    palm: formac?0:h.palm,
     refeicao: formType==='reforco' ? h.refeicao : 0,
-    almjant: formType==='prevencao' ? h.almjant : 0,
+    almjant: (formType==='prevencao'||simple) ? h.almjant : 0,
     grau: formType==='prevencao' ? formGrau : undefined,
     equipa: formType==='prevencao' ? equipaList.slice() : [],
     total: c ? c.total : 0,
@@ -1433,7 +1522,14 @@ function deleteRecordFromForm(){
 /* ============ TARIFAS ============ */
 function onRateCategoriaChange(){
   const cat = document.getElementById('rateCategoria').value;
-  document.getElementById('rateGrau').style.display = cat==='prevencao' ? 'block' : 'none';
+  const gs = document.getElementById('rateGrau');
+  const wanted = cat==='prevencao' ? 'g' : (isSimple(cat) ? 's' : '');
+  if(gs.dataset.mode !== wanted){
+    gs.dataset.mode = wanted;
+    if(wanted==='g') gs.innerHTML = '<option value="pracas">Praça</option><option value="chefe">Chefe</option>';
+    if(wanted==='s') gs.innerHTML = '<option value="normal">Aeroporto</option><option value="prolongamento">Prolongamento</option><option value="reabertura">Reabertura</option>';
+  }
+  gs.style.display = wanted ? 'block' : 'none';
   renderRateTable();
 }
 
@@ -1443,17 +1539,20 @@ function renderRateTable(){
   const isPrev = cat==='prevencao';
   const grau = document.getElementById('rateGrau').value;
   if(simple && (!state.rates[cat] || !Object.keys(state.rates[cat]).length)){
-    state.rates[cat] = {}; state.rates[cat][new Date().getFullYear()] = {hora:0, horaProl:0, fator:1.08};
+    state.rates[cat] = {}; state.rates[cat][new Date().getFullYear()] = emptyAeroYear();
   }
+  if(simple) Object.values(state.rates[cat]).forEach(migrateAeroEntry);
   const rateSet = state.rates[cat] || {};
   const years = Object.keys(rateSet).sort((a,b)=>a-b);
   if(simple){
-    let h = `<tr><th>Ano</th><th>Aeroporto €/h</th><th>Prolong. €/h</th><th>Fator</th></tr>`;
+    let h = `<tr><th>Ano</th><th>Dias úteis</th><th>Fds/feriado</th><th>P.Alm</th><th>Alm/Jant</th><th>Fator</th></tr>`;
     years.forEach(y=>{
-      const e = rateSet[y];
+      const e = rateSet[y], r = e[grau] || zeroAero();
       h += `<tr><td>${y}</td>
-        <td><input type="number" step="0.01" value="${e.hora||0}" data-y="${y}" data-f="hora"></td>
-        <td><input type="number" step="0.01" value="${e.horaProl||0}" data-y="${y}" data-f="horaProl"></td>
+        <td><input type="number" step="0.01" value="${r.util||0}" data-y="${y}" data-f="util"></td>
+        <td><input type="number" step="0.01" value="${r.fds||0}" data-y="${y}" data-f="fds"></td>
+        <td><input type="number" step="0.01" value="${r.palm||0}" data-y="${y}" data-f="palm"></td>
+        <td><input type="number" step="0.01" value="${r.almjant||0}" data-y="${y}" data-f="almjant"></td>
         <td><input type="number" step="0.01" value="${e.fator||1.08}" data-y="${y}" data-f="fator"></td></tr>`;
     });
     document.getElementById('rateTable').innerHTML = h;
@@ -1496,8 +1595,9 @@ function addRateYear(){
       chefe:{semDia:0,semNoite:0,fdsDia:0,fdsNoite:0,palm:0,almjant:0}, fator:1.08};
     state.rates[cat][yr] = JSON.parse(JSON.stringify(base));
   } else {
-    const base = nearest ? state.rates[cat][nearest] : (isSimple(cat) ? {hora:0,horaProl:0,fator:1.08} : {semDia:0,semNoite:0,fdsDia:0,fdsNoite:0,palm:0,refeicao:0,fator:1.08});
-    state.rates[cat][yr] = Object.assign({}, base);
+    const base = nearest ? state.rates[cat][nearest] : (isSimple(cat) ? emptyAeroYear() : {semDia:0,semNoite:0,fdsDia:0,fdsNoite:0,palm:0,refeicao:0,fator:1.08});
+    state.rates[cat][yr] = JSON.parse(JSON.stringify(base));
+    if(isSimple(cat)) migrateAeroEntry(state.rates[cat][yr]);
   }
   saveState();
   input.value = '';
@@ -1507,7 +1607,7 @@ function addRateYear(){
 
 function saveRates(){
   const cat = document.getElementById('rateCategoria').value;
-  const isPrev = cat==='prevencao';
+  const isPrev = cat==='prevencao' || isSimple(cat);
   const grau = document.getElementById('rateGrau').value;
   document.querySelectorAll('#rateTable input').forEach(inp=>{
     const y = inp.dataset.y, f = inp.dataset.f;
@@ -1515,6 +1615,7 @@ function saveRates(){
     if(f==='fator'){
       state.rates[cat][y].fator = val;
     } else if(isPrev){
+      state.rates[cat][y][grau] = state.rates[cat][y][grau] || zeroAero();
       state.rates[cat][y][grau][f] = val;
     } else {
       state.rates[cat][y][f] = val;
@@ -1600,7 +1701,7 @@ function printCurrentView(){
     const cat = document.getElementById('rateCategoria').value;
     const catLbl = cat==='prevencao' ? 'Prevenção / Descarga' : catLabel(cat);
     const grauSel = document.getElementById('rateGrau');
-    const grauLabel = (cat==='prevencao') ? (' · ' + grauSel.options[grauSel.selectedIndex].textContent) : '';
+    const grauLabel = (cat==='prevencao' || isSimple(cat)) ? (' · ' + grauSel.options[grauSel.selectedIndex].textContent) : '';
     title = 'Tabela de tarifas';
     meta = catLbl + grauLabel;
   } else {
